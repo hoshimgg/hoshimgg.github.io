@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/rin.png">
+  <link rel="mask-icon" href="/images/rin.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"miaoguoge.xyz","root":"/","images":"/images","scheme":"Gemini","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="Geth客户端共有三种同步模式：”snap”, “full” 和 “light”，默认是snap（前身为fast），本篇文章探究snap模式下可用的RPC接口。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Geth snap同步模式下可用的RPC接口">
+<meta property="og:url" content="http://miaoguoge.xyz/geth-snap-rpc/index.html">
+<meta property="og:site_name" content="星空凛的博客">
+<meta property="og:description" content="Geth客户端共有三种同步模式：”snap”, “full” 和 “light”，默认是snap（前身为fast），本篇文章探究snap模式下可用的RPC接口。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-26T06:55:33.000Z">
+<meta property="article:modified_time" content="2022-03-05T12:57:31.050Z">
+<meta property="article:author" content="ほしぞら　りん">
+<meta property="article:tag" content="ETH">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://miaoguoge.xyz/geth-snap-rpc/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://miaoguoge.xyz/geth-snap-rpc/","path":"geth-snap-rpc/","title":"Geth snap同步模式下可用的RPC接口"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Geth snap同步模式下可用的RPC接口 | 星空凛的博客</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+  <meta name="referrer" content="no-referrer">
+<link rel="alternate" href="/atom.xml" title="星空凛的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">星空凛的博客</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我凛最可爱</p>
+      <img class="custom-logo-image" src="/images/rin2.png" alt="星空凛的博客">
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#web3"><span class="nav-text">web3</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94web3-clientVersion"><span class="nav-text">✔web3_clientVersion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94web3-sha3"><span class="nav-text">✔web3_sha3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#net"><span class="nav-text">net</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94net-version"><span class="nav-text">✔net_version</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94net-listening"><span class="nav-text">✔net_listening</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94net-peerCount"><span class="nav-text">✔net_peerCount</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#eth"><span class="nav-text">eth</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Ceth-protocolVersion"><span class="nav-text">❌eth_protocolVersion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-syncing"><span class="nav-text">✔eth_syncing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Ceth-coinbase"><span class="nav-text">❌eth_coinbase</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-mining"><span class="nav-text">✔eth_mining</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-hashrate"><span class="nav-text">✔eth_hashrate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-gasPrice"><span class="nav-text">✔eth_gasPrice</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-accounts"><span class="nav-text">✔eth_accounts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Ceth-getBalance"><span class="nav-text">❌eth_getBalance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Ceth-getStorageAt"><span class="nav-text">❌eth_getStorageAt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Ceth-getTransactionCount"><span class="nav-text">❌eth_getTransactionCount</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getBlockTransactionCountByHash"><span class="nav-text">✔eth_getBlockTransactionCountByHash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getBlockTransactionCountByNumber"><span class="nav-text">✔eth_getBlockTransactionCountByNumber</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getUncleCountByBlockHash"><span class="nav-text">✔eth_getUncleCountByBlockHash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getUncleCountByBlockNumber"><span class="nav-text">✔eth_getUncleCountByBlockNumber</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Ceth-getCode"><span class="nav-text">❌eth_getCode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-sign"><span class="nav-text">✔eth_sign</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%93eth-sendTransaction"><span class="nav-text">❓eth_sendTransaction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%93eth-sendRawTransaction"><span class="nav-text">❓eth_sendRawTransaction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%93eth-call"><span class="nav-text">❓eth_call</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%93eth-estimateGas"><span class="nav-text">❓eth_estimateGas</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getBlockByHash"><span class="nav-text">✔eth_getBlockByHash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getBlockByNumber"><span class="nav-text">✔eth_getBlockByNumber</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getTransactionByHash"><span class="nav-text">✔eth_getTransactionByHash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getTransactionByBlockHashAndIndex"><span class="nav-text">✔eth_getTransactionByBlockHashAndIndex</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getTransactionByBlockNumberAndIndex"><span class="nav-text">✔eth_getTransactionByBlockNumberAndIndex</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getTransactionReceipt"><span class="nav-text">✔eth_getTransactionReceipt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getUncleByBlockHashAndIndex"><span class="nav-text">✔eth_getUncleByBlockHashAndIndex</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getUncleByBlockNumberAndIndex"><span class="nav-text">✔eth_getUncleByBlockNumberAndIndex</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Ceth-getCompilers"><span class="nav-text">❌eth_getCompilers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Ceth-compileSolidity"><span class="nav-text">❌eth_compileSolidity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Ceth-compileLLL"><span class="nav-text">❌eth_compileLLL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Ceth-compileSerpent"><span class="nav-text">❌eth_compileSerpent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-newFilter"><span class="nav-text">✔eth_newFilter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Ceth-newBlockFilter"><span class="nav-text">❌eth_newBlockFilter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Ceth-newPendingTransactionFilter"><span class="nav-text">❌eth_newPendingTransactionFilter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-uninstallFilter"><span class="nav-text">✔eth_uninstallFilter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getFilterChanges"><span class="nav-text">✔eth_getFilterChanges</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getFilterLogs"><span class="nav-text">✔eth_getFilterLogs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%94eth-getLogs"><span class="nav-text">✔eth_getLogs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8C-eth-getWork"><span class="nav-text">❌   eth_getWork</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%93eth-submitWork"><span class="nav-text">❓eth_submitWork</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%93eth-submitHashrate"><span class="nav-text">❓eth_submitHashrate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Ceth-blockNumber"><span class="nav-text">❌eth_blockNumber</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#db"><span class="nav-text">db</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Cdb-putString"><span class="nav-text">❌db_putString</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Cdb-getString"><span class="nav-text">❌db_getString</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Cdb-putHex"><span class="nav-text">❌db_putHex</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Cdb-getHex"><span class="nav-text">❌db_getHex</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shh"><span class="nav-text">shh</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Cshh-version"><span class="nav-text">❌shh_version</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Cshh-post"><span class="nav-text">❌shh_post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Cshh-newIdentity"><span class="nav-text">❌shh_newIdentity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Cshh-hasIdentity"><span class="nav-text">❌shh_hasIdentity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Cshh-newGroup"><span class="nav-text">❌shh_newGroup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Cshh-addToGroup"><span class="nav-text">❌shh_addToGroup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Cshh-newFilter"><span class="nav-text">❌shh_newFilter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Cshh-uninstallFilter"><span class="nav-text">❌shh_uninstallFilter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Cshh-getFilterChanges"><span class="nav-text">❌shh_getFilterChanges</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8Cshh-getMessages"><span class="nav-text">❌shh_getMessages</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ほしぞら　りん"
+      src="/images/rin.png">
+  <p class="site-author-name" itemprop="name">ほしぞら　りん</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hoshimgg" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hoshimgg" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hoshimgg@outlook.com" title="E-Mail → mailto:hoshimgg@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/miaoguoge" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;miaoguoge" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/hoshizora.rin.777" title="Facebook → https:&#x2F;&#x2F;www.facebook.com&#x2F;hoshizora.rin.777" rel="noopener" target="_blank"><i class="fab fa-facebook fa-fw"></i>Facebook</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://orangecheers.top/" title="https:&#x2F;&#x2F;orangecheers.top&#x2F;" rel="noopener" target="_blank">果果</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yanlc39.github.io/" title="https:&#x2F;&#x2F;yanlc39.github.io&#x2F;" rel="noopener" target="_blank">北原春希</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lee-tc.github.io/" title="https:&#x2F;&#x2F;lee-tc.github.io&#x2F;" rel="noopener" target="_blank">hbltc</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hoshimgg" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://miaoguoge.xyz/geth-snap-rpc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rin.png">
+      <meta itemprop="name" content="ほしぞら　りん">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="星空凛的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Geth snap同步模式下可用的RPC接口
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-01-26 14:55:33" itemprop="dateCreated datePublished" datetime="2022-01-26T14:55:33+08:00">2022-01-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%8C%BA%E5%9D%97%E9%93%BE/" itemprop="url" rel="index"><span itemprop="name">区块链</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>Geth客户端共有三种同步模式：”snap”, “full” 和 “light”，默认是snap（前身为fast），本篇文章探究snap模式下可用的RPC接口。</p>
+<span id="more"></span>
+
+<ul>
+<li>snap：同步所有的区块头、区块体和状态数据，但不对区块中的交易进行重放以生成状态数据，只会在后期对区块中的数据（包括交易）进行<strong>校验</strong>。 </li>
+<li>full：同步所有的区块头，区块体，并重放区块中的交易以<strong>生成</strong>状态数据。所有区块和区块中的交易都会被<strong>逐一验证</strong>。</li>
+<li>light：同步所有区块头，不同步区块体和状态数据，仅在需要时从网络上其他节点处获取。不会主动进行校验（仅在读取时进行哈希校验）。</li>
+</ul>
+<p>关于以太坊客户端的更多信息：<a href="http://miaoguoge.xyz/ETH-note/#3-client">以太坊学习笔记</a></p>
+<p>即使是snap模式，在同步后期（约80%进度之后）依然需要类似full模式参与加密校验（同步trienode），不幸的是，HDD无法支撑起这一过程所需的大量读写请求（<a target="_blank" rel="noopener" href="https://github.com/ethereum/go-ethereum/issues/20938#issuecomment-616402016">geth progress when switching to trie download · Issue #20938 · ethereum&#x2F;go-ethereum (github.com)</a>）。因此，本文中某些被标记为<code>不可用</code>的接口可能只是因为尚未完全同步。</p>
+<p><strong>state trie：</strong></p>
+<p>snap节点因为没有执行任何交易，所以没有任何可用的账户状态（即余额、智能合约代码和数据）。这些需要单独下载并与最新块进行交叉检查。这个阶段称为state trie 下载。节点以加密方式链接到每个块，以便可以实际验证账户没有被篡改。这种加密链接是通过在账户之上创建一个树结构来完成的，这个包含所有帐户和中间加密证明的巨大数据结构称为state trie。</p>
+<p>而这个巨型的数据结构仍然在不断变化：每个块（每15 秒）要从这个树中删除约 1000 个节点，并添加约 2000 个新节点。这意味着节点需要同步每秒更改200次的数据集（这对机械硬盘来说是不可承受的）。在下载时，一个块只包含一个root state，当节点开始同步时，它只知道 1 个trie节点并尝试下载它。但是该节点最多可以引用 16 个新节点，因此在下一步中，节点又开始同步 16 个新节点。</p>
+<p>官方API文档：<a target="_blank" rel="noopener" href="https://playground.open-rpc.org/?schemaUrl=https://raw.githubusercontent.com/ethereum/eth1.0-apis/assembled-spec/openrpc.json&uiSchema%5BappBar%5D%5Bui:splitView%5D=false&uiSchema%5BappBar%5D%5Bui:input%5D=false&uiSchema%5BappBar%5D%5Bui:examplesDropdown%5D=false">OPEN-RPC Playground</a></p>
+<p>中文API文档：<a target="_blank" rel="noopener" href="http://cw.hubwiz.com/card/c/ethereum-json-rpc-api/">以太坊JSON RPC手册</a></p>
+<h2 id="web3"><a href="#web3" class="headerlink" title="web3"></a>web3</h2><h3 id="✔web3-clientVersion"><a href="#✔web3-clientVersion" class="headerlink" title="✔web3_clientVersion"></a>✔web3_clientVersion</h3><p>返回当前的客户端版本。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;web3_clientVersion&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;Geth/v1.10.16-unstable-f9ce40bb-20220124/linux-amd64/go1.17.6&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔web3-sha3"><a href="#✔web3-sha3" class="headerlink" title="✔web3_sha3"></a>✔web3_sha3</h3><p>返回指定数据的<code>Keccak-256</code>哈希值。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;web3_sha3&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x68656c6c6f20776f726c64&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="net"><a href="#net" class="headerlink" title="net"></a>net</h2><h3 id="✔net-version"><a href="#✔net-version" class="headerlink" title="✔net_version"></a>✔net_version</h3><p>返回当前连接网络的ID。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;net_version&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;1&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解释：</p>
+<ul>
+<li>1: Ethereum Mainnet</li>
+<li>2: Morden Testnet (deprecated)</li>
+<li>3: Ropsten Testnet</li>
+<li>4: Rinkeby Testnet</li>
+<li>42: Kovan Testnet</li>
+</ul>
+<h3 id="✔net-listening"><a href="#✔net-listening" class="headerlink" title="✔net_listening"></a>✔net_listening</h3><p>返回客户端是否处于监听网络连接的状态。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;net_listening&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔net-peerCount"><a href="#✔net-peerCount" class="headerlink" title="✔net_peerCount"></a>✔net_peerCount</h3><p>返回当前客户端所连接的对端节点数量。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;net_peerCount&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0x32&quot;</span> <span class="comment">// 16进制</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="eth"><a href="#eth" class="headerlink" title="eth"></a>eth</h2><h3 id="❌eth-protocolVersion"><a href="#❌eth-protocolVersion" class="headerlink" title="❌eth_protocolVersion"></a>❌eth_protocolVersion</h3><p>返回当前以太坊协议的版本。<strong>不可用。</strong></p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_protocolVersion&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;error&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;code&quot;</span>: <span class="number">-32601</span>,</span><br><span class="line">        <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;the method eth_protocolVersion does not exist/is not available&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-syncing"><a href="#✔eth-syncing" class="headerlink" title="✔eth_syncing"></a>✔eth_syncing</h3><p>对于已经同步的客户端，该调用返回一个描述同步状态的对象；对于未同步客户端，返回false。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_syncing&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;currentBlock&quot;</span>: <span class="string">&quot;0xd6d765&quot;</span>, <span class="comment">// 当前块</span></span><br><span class="line">        <span class="attr">&quot;healedBytecodeBytes&quot;</span>: <span class="string">&quot;0x23ba0f&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;healedBytecodes&quot;</span>: <span class="string">&quot;0x108&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;healedTrienodeBytes&quot;</span>: <span class="string">&quot;0x469c3cba&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;healedTrienodes&quot;</span>: <span class="string">&quot;0x3baacb&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;healingBytecode&quot;</span>: <span class="string">&quot;0x0&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;healingTrienodes&quot;</span>: <span class="string">&quot;0x454&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;highestBlock&quot;</span>: <span class="string">&quot;0xd6d7c1&quot;</span>, <span class="comment">// 预估最高块</span></span><br><span class="line">        <span class="attr">&quot;startingBlock&quot;</span>: <span class="string">&quot;0x0&quot;</span>, <span class="comment">// 开始块</span></span><br><span class="line">        <span class="attr">&quot;syncedAccountBytes&quot;</span>: <span class="string">&quot;0x955cae310&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;syncedAccounts&quot;</span>: <span class="string">&quot;0x9f891ad&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;syncedBytecodeBytes&quot;</span>: <span class="string">&quot;0xb24fd499&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;syncedBytecodes&quot;</span>: <span class="string">&quot;0x78dfc&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;syncedStorage&quot;</span>: <span class="string">&quot;0x24528b05&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;syncedStorageBytes&quot;</span>: <span class="string">&quot;0x1e667173fe&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌eth-coinbase"><a href="#❌eth-coinbase" class="headerlink" title="❌eth_coinbase"></a>❌eth_coinbase</h3><p>返回客户端的coinbase地址。<strong>不可用。</strong></p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_coinbase&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;error&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;code&quot;</span>: <span class="number">-32000</span>,</span><br><span class="line">        <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;etherbase must be explicitly specified&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-mining"><a href="#✔eth-mining" class="headerlink" title="✔eth_mining"></a>✔eth_mining</h3><p>返回客户端是否在挖矿。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_mining&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-hashrate"><a href="#✔eth-hashrate" class="headerlink" title="✔eth_hashrate"></a>✔eth_hashrate</h3><p>返回节点挖矿时每秒可算出的哈希数量。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_hashrate&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0x0&quot;</span> <span class="comment">// 没有在挖矿，返回0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-gasPrice"><a href="#✔eth-gasPrice" class="headerlink" title="✔eth_gasPrice"></a>✔eth_gasPrice</h3><p>返回当前的gas价格，单位：wei。可用。</p>
+<p>经与<a target="_blank" rel="noopener" href="https://etherscan.io/gastracker">Etherscan</a>比较，确为实时gas价格。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_gasPrice&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0x14bcbeb9e7&quot;</span> <span class="comment">// 16进制</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-accounts"><a href="#✔eth-accounts" class="headerlink" title="✔eth_accounts"></a>✔eth_accounts</h3><p>返回客户端持有的地址列表。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_accounts&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌eth-getBalance"><a href="#❌eth-getBalance" class="headerlink" title="❌eth_getBalance"></a>❌eth_getBalance</h3><p>返回指定地址账户的余额。<strong>不可用。</strong></p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getBalance&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x00000000219ab540356cbb839cbe05303d7705fa&quot;</span>, <span class="comment">// 要检查余额的地址</span></span><br><span class="line">        <span class="string">&quot;latest&quot;</span> <span class="comment">// 整数块编号，或者字符串&quot;latest&quot;、&quot;earliest&quot;、&quot;pending&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0x0&quot;</span> <span class="comment">// 无论什么地址始终为0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌eth-getStorageAt"><a href="#❌eth-getStorageAt" class="headerlink" title="❌eth_getStorageAt"></a>❌eth_getStorageAt</h3><p>返回指定地址指定存储位置的值。<strong>不可用。</strong></p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getStorageAt&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x091B5Ff4Ec84aEE78Cd586571f81DEA8548938d7&quot;</span>, <span class="comment">// 指定的地址</span></span><br><span class="line">        <span class="string">&quot;0x0&quot;</span>, <span class="comment">// 存储的位置号</span></span><br><span class="line">        <span class="string">&quot;latest&quot;</span> <span class="comment">// 整数块号，或者字符串&quot;latest&quot;、&quot;earliest&quot;、&quot;pending&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;</span> <span class="comment">// 始终为0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌eth-getTransactionCount"><a href="#❌eth-getTransactionCount" class="headerlink" title="❌eth_getTransactionCount"></a>❌eth_getTransactionCount</h3><p>返回指定地址发生的交易数量。<strong>不可用。</strong></p>
+<p>请求 #1：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getTransactionCount&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x0F42798dEf01713f2e710669e2182B2d3D4110E3&quot;</span>, <span class="comment">// 地址</span></span><br><span class="line">        <span class="string">&quot;latest&quot;</span> <span class="comment">// 整数块编号，或者字符串&quot;latest&quot;、&quot;earliest&quot;、&quot;pending&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应 #1：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0x0&quot;</span> <span class="comment">//若为&quot;latest&quot;，始终为0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请求 #2：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getTransactionCount&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x3c29081b8898f1095d1ba0b2e05eacd45fda61bd&quot;</span>,</span><br><span class="line">        <span class="string">&quot;0xD6C9AA&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应 #2：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0x0&quot;</span> <span class="comment">//始终为0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="✔eth-getBlockTransactionCountByHash"><a href="#✔eth-getBlockTransactionCountByHash" class="headerlink" title="✔eth_getBlockTransactionCountByHash"></a>✔eth_getBlockTransactionCountByHash</h3><p>返回指定块内的交易数量，使用哈希来指定块。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getBlockTransactionCountByHash&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x28c1de373975f51eeaea73ab46bb900ffc9c2b63199eda739b7053ed51720c1a&quot;</span> <span class="comment">// 块哈希</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0x65&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-getBlockTransactionCountByNumber"><a href="#✔eth-getBlockTransactionCountByNumber" class="headerlink" title="✔eth_getBlockTransactionCountByNumber"></a>✔eth_getBlockTransactionCountByNumber</h3><p>返回指定块内的交易数量，使用块编号指定块。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getBlockTransactionCountByNumber&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0xD6D85B&quot;</span> <span class="comment">// 16进制的块编号</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0xd7&quot;</span> <span class="comment">// 该块内发生的交易</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-getUncleCountByBlockHash"><a href="#✔eth-getUncleCountByBlockHash" class="headerlink" title="✔eth_getUncleCountByBlockHash"></a>✔eth_getUncleCountByBlockHash</h3><p>返回指定块的叔伯数量，使用哈希指定块。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getUncleCountByBlockHash&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x14f5174e081999db250e08e57c7bbfa7ea502d2016f8ce7a3facb5025715f80c&quot;</span> <span class="comment">// 块哈希</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0x0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-getUncleCountByBlockNumber"><a href="#✔eth-getUncleCountByBlockNumber" class="headerlink" title="✔eth_getUncleCountByBlockNumber"></a>✔eth_getUncleCountByBlockNumber</h3><p>返回指定块的叔伯数量，使用块编号指定块。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getUncleCountByBlockNumber&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0xD6D85B&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0x0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌eth-getCode"><a href="#❌eth-getCode" class="headerlink" title="❌eth_getCode"></a>❌eth_getCode</h3><p>返回指定地址的代码。<strong>不可用。</strong></p>
+<p>请求 #1：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getCode&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x60BB16c4A931b1a0B8A7D945C651DD90f41D42Cf&quot;</span>,</span><br><span class="line">        <span class="string">&quot;0x0&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应 #1：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0x&quot;</span> <span class="comment">// 始终为&quot;0x&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请求 #2：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getCode&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x60BB16c4A931b1a0B8A7D945C651DD90f41D42Cf&quot;</span>,</span><br><span class="line">        <span class="string">&quot;0x2&quot;</span> <span class="comment">// 非0值</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应 #2：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;error&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;code&quot;</span>: <span class="number">-32000</span>,</span><br><span class="line">        <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;missing trie node 4943d941637411107494da9ec8bc04359d731bfd08b72b4d0edcbd4cd2ecb341 (path )&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-sign"><a href="#✔eth-sign" class="headerlink" title="✔eth_sign"></a>✔eth_sign</h3><p>计算以太坊签名。可用。</p>
+<p>签名公式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sign(keccak256(<span class="string">&quot;\x19Ethereum Signed Message:\n&quot;</span> + <span class="built_in">len</span>(message) + message))</span><br></pre></td></tr></table></figure>
+
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_sign&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x0F42798dEf01713f2e710669e2182B2d3D4110E3&quot;</span>, <span class="comment">// 地址</span></span><br><span class="line">        <span class="string">&quot;0xdeadbeaf&quot;</span> <span class="comment">// 要签名的消息</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;error&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;code&quot;</span>: <span class="number">-32000</span>,</span><br><span class="line">        <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;unknown account&quot;</span> <span class="comment">// 始终为&quot;unknown account&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❓eth-sendTransaction"><a href="#❓eth-sendTransaction" class="headerlink" title="❓eth_sendTransaction"></a>❓eth_sendTransaction</h3><p>创建一个新的消息调用交易，如果数据字段中包含代码，则创建一个合约。需要切换至测试网，暂未测试。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="❓eth-sendRawTransaction"><a href="#❓eth-sendRawTransaction" class="headerlink" title="❓eth_sendRawTransaction"></a>❓eth_sendRawTransaction</h3><p>为签名交易创建一个新的消息调用交易或合约。暂未测试。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="❓eth-call"><a href="#❓eth-call" class="headerlink" title="❓eth_call"></a>❓eth_call</h3><p>立刻执行一个新的消息调用，无需在区块链上创建交易。暂未测试。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="❓eth-estimateGas"><a href="#❓eth-estimateGas" class="headerlink" title="❓eth_estimateGas"></a>❓eth_estimateGas</h3><p>执行并估算一个交易需要的gas用量，该次交易不会写入区块链，估算的数值可能比实际用量大的多。暂未测试。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-getBlockByHash"><a href="#✔eth-getBlockByHash" class="headerlink" title="✔eth_getBlockByHash"></a>✔eth_getBlockByHash</h3><p>返回使用哈希指定的块中的交易信息。可用。</p>
+<p>请求 #1：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getBlockByHash&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x28c1de373975f51eeaea73ab46bb900ffc9c2b63199eda739b7053ed51720c1a&quot;</span>, <span class="comment">// 块哈希</span></span><br><span class="line">        <span class="literal">false</span> <span class="comment">// 仅返回交易哈希</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应 #1：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;baseFeePerGas&quot;</span>: <span class="string">&quot;0x2e7dbfbd45&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;difficulty&quot;</span>: <span class="string">&quot;0x2a938acf800899&quot;</span>, <span class="comment">// 块难度</span></span><br><span class="line">        <span class="attr">&quot;extraData&quot;</span>: <span class="string">&quot;0xe4b883e5bda9e7a59ee4bb99e9b1bc4a1421&quot;</span>, <span class="comment">// 块额外数据</span></span><br><span class="line">        <span class="attr">&quot;gasLimit&quot;</span>: <span class="string">&quot;0x1c9509e&quot;</span>, <span class="comment">// 本块允许的最大gas用量</span></span><br><span class="line">        <span class="attr">&quot;gasUsed&quot;</span>: <span class="string">&quot;0x742d2c&quot;</span>, <span class="comment">// 本块中所有交易使用的总gas用量</span></span><br><span class="line">        <span class="attr">&quot;hash&quot;</span>: <span class="string">&quot;0x28c1de373975f51eeaea73ab46bb900ffc9c2b63199eda739b7053ed51720c1a&quot;</span>, <span class="comment">// 块哈希，挂起块为null</span></span><br><span class="line">        <span class="attr">&quot;logsBloom&quot;</span>: <span class="string">&quot;0x812....40a1&quot;</span>, <span class="comment">// 快日志的bloom过滤器，挂起块为null</span></span><br><span class="line">        <span class="attr">&quot;miner&quot;</span>: <span class="string">&quot;0x829bd824b016326a401d083b33d092293333a830&quot;</span>, <span class="comment">//  挖矿奖励的接收账户</span></span><br><span class="line">        <span class="attr">&quot;mixHash&quot;</span>: <span class="string">&quot;0xf1e75a3be84b59080b0db836a3c739576b8f08cb499adfc6ccfff484236504dd&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;nonce&quot;</span>: <span class="string">&quot;0x0000c91c35389817&quot;</span>, <span class="comment">// 生成的pow哈希，挂起块为null</span></span><br><span class="line">        <span class="attr">&quot;number&quot;</span>: <span class="string">&quot;0xd6c9aa&quot;</span>, <span class="comment">// 块编号，挂起块为null</span></span><br><span class="line">        <span class="attr">&quot;parentHash&quot;</span>: <span class="string">&quot;0x093ff6c4ea93d0fe104f573718c30b0fdf1eca20e7649d324bb52b40ccc0fe11&quot;</span>, <span class="comment">// 父块的哈希</span></span><br><span class="line">        <span class="attr">&quot;receiptsRoot&quot;</span>: <span class="string">&quot;0x1f2463476fcbcee92c2fef2def36da9c77fffe6d7445a63c1882322e2b6b0922&quot;</span>,  <span class="comment">// 块交易收据树的根节点</span></span><br><span class="line">        <span class="attr">&quot;sha3Uncles&quot;</span>: <span class="string">&quot;0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347&quot;</span>, <span class="comment">// 块中叔伯数据的SHA3哈希</span></span><br><span class="line">        <span class="attr">&quot;size&quot;</span>: <span class="string">&quot;0xa205&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;stateRoot&quot;</span>: <span class="string">&quot;0x5aa4eb405fbde30d601519d3e1b41bc238b24ccc87d9a5ed492e29cc712344b0&quot;</span>, <span class="comment">// 块最终状态树的根节点</span></span><br><span class="line">        <span class="attr">&quot;timestamp&quot;</span>: <span class="string">&quot;0x61f040be&quot;</span>, <span class="comment">// 块时间戳</span></span><br><span class="line">        <span class="attr">&quot;totalDifficulty&quot;</span>: <span class="string">&quot;0x86fab69939731be5b81&quot;</span>,  <span class="comment">// 截止到本块的链上总难度</span></span><br><span class="line">        <span class="attr">&quot;transactions&quot;</span>: [</span><br><span class="line">            <span class="string">&quot;0x0f4f3fa3bc04b53feaf6a12d0112cf33a2449727d35f4d5b1fb7541fe3c896e4&quot;</span>,</span><br><span class="line">            <span class="string">&quot;0xa161c7f5daefaa211f1eefd3b6862f99b3d176e057b64abc69d8b20d8ed925f8&quot;</span>,</span><br><span class="line">            ......,</span><br><span class="line">            <span class="string">&quot;0x8e373a16fab08652607273427925f0dac5730896761010a963eef623816c14e1&quot;</span></span><br><span class="line">        ], <span class="comment">// 交易哈希数组</span></span><br><span class="line">        <span class="attr">&quot;transactionsRoot&quot;</span>: <span class="string">&quot;0x8cfd6631ebde34f2b39fdc7b281c305790925b4aae0c09179285109c1474f886&quot;</span>, <span class="comment">// 块中的交易树根节点</span></span><br><span class="line">        <span class="attr">&quot;uncles&quot;</span>: [] <span class="comment">// 叔伯哈希数组</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请求 #2：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getBlockByHash&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x28c1de373975f51eeaea73ab46bb900ffc9c2b63199eda739b7053ed51720c1a&quot;</span>,</span><br><span class="line">        <span class="literal">true</span> <span class="comment">// 返回完整的交易对象</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应 #2：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;baseFeePerGas&quot;</span>: <span class="string">&quot;0x2e7dbfbd45&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;difficulty&quot;</span>: <span class="string">&quot;0x2a938acf800899&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;extraData&quot;</span>: <span class="string">&quot;0xe4b883e5bda9e7a59ee4bb99e9b1bc4a1421&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;gasLimit&quot;</span>: <span class="string">&quot;0x1c9509e&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;gasUsed&quot;</span>: <span class="string">&quot;0x742d2c&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;hash&quot;</span>: <span class="string">&quot;0x28c1de373975f51eeaea73ab46bb900ffc9c2b63199eda739b7053ed51720c1a&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;logsBloom&quot;</span>: <span class="string">&quot;0x8128218....4240a1&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;miner&quot;</span>: <span class="string">&quot;0x829bd824b016326a401d083b33d092293333a830&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;mixHash&quot;</span>: <span class="string">&quot;0xf1e75a3be84b59080b0db836a3c739576b8f08cb499adfc6ccfff484236504dd&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;nonce&quot;</span>: <span class="string">&quot;0x0000c91c35389817&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;number&quot;</span>: <span class="string">&quot;0xd6c9aa&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;parentHash&quot;</span>: <span class="string">&quot;0x093ff6c4ea93d0fe104f573718c30b0fdf1eca20e7649d324bb52b40ccc0fe11&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;receiptsRoot&quot;</span>: <span class="string">&quot;0x1f2463476fcbcee92c2fef2def36da9c77fffe6d7445a63c1882322e2b6b0922&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;sha3Uncles&quot;</span>: <span class="string">&quot;0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;size&quot;</span>: <span class="string">&quot;0xa205&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;stateRoot&quot;</span>: <span class="string">&quot;0x5aa4eb405fbde30d601519d3e1b41bc238b24ccc87d9a5ed492e29cc712344b0&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;timestamp&quot;</span>: <span class="string">&quot;0x61f040be&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;totalDifficulty&quot;</span>: <span class="string">&quot;0x86fab69939731be5b81&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;transactions&quot;</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;accessList&quot;</span>: [],</span><br><span class="line">                <span class="attr">&quot;blockHash&quot;</span>: <span class="string">&quot;0x28c1de373975f51eeaea73ab46bb900ffc9c2b63199eda739b7053ed51720c1a&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;blockNumber&quot;</span>: <span class="string">&quot;0xd6c9aa&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;chainId&quot;</span>: <span class="string">&quot;0x1&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;from&quot;</span>: <span class="string">&quot;0x3c29081b8898f1095d1ba0b2e05eacd45fda61bd&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;gas&quot;</span>: <span class="string">&quot;0x8c746&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;gasPrice&quot;</span>: <span class="string">&quot;0x30969e0d37&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;hash&quot;</span>: <span class="string">&quot;0x0f4f3fa3bc04b53feaf6a12d0112cf33a2449727d35f4d5b1fb7541fe3c896e4&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;input&quot;</span>: <span class="string">&quot;0xa0050....b43d&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;maxFeePerGas&quot;</span>: <span class="string">&quot;0x310da2876d&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;maxPriorityFeePerGas&quot;</span>: <span class="string">&quot;0x218de4ff2&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;nonce&quot;</span>: <span class="string">&quot;0xa1&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;r&quot;</span>: <span class="string">&quot;0xba242a077779245b4e5ea0692c3aa64fb8304602b80634c4dd51b1ac94d32322&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;s&quot;</span>: <span class="string">&quot;0x617828cfb4ed14373643aeae1ba9adde0d5294e65a7549d9ecc87f351ecdf8a7&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;to&quot;</span>: <span class="string">&quot;0xa10fca31a2cb432c9ac976779dc947cfdb003ef0&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;transactionIndex&quot;</span>: <span class="string">&quot;0x0&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;0x2&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;v&quot;</span>: <span class="string">&quot;0x0&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;value&quot;</span>: <span class="string">&quot;0x0&quot;</span></span><br><span class="line">            &#125;,</span><br><span class="line">            ......</span><br><span class="line">        ], <span class="comment">// 交易数组，含义可参考 eth_getTransactionByHash</span></span><br><span class="line">        <span class="attr">&quot;transactionsRoot&quot;</span>: <span class="string">&quot;0x8cfd6631ebde34f2b39fdc7b281c305790925b4aae0c09179285109c1474f886&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;uncles&quot;</span>: []</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-getBlockByNumber"><a href="#✔eth-getBlockByNumber" class="headerlink" title="✔eth_getBlockByNumber"></a>✔eth_getBlockByNumber</h3><p>返回指定编号的块。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getBlockByNumber&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0xD6C9AA&quot;</span>, <span class="comment">// 指定块的编号</span></span><br><span class="line">        <span class="literal">false</span> <span class="comment">// 返回完整的交易对象或仅返回交易哈希</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<p>同 <a href="#eth_getBlockByHash">eth_getBlockByHash</a></p>
+<h3 id="✔eth-getTransactionByHash"><a href="#✔eth-getTransactionByHash" class="headerlink" title="✔eth_getTransactionByHash"></a>✔eth_getTransactionByHash</h3><p>返回指定哈希对应的交易。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getTransactionByHash&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x0f4f3fa3bc04b53feaf6a12d0112cf33a2449727d35f4d5b1fb7541fe3c896e4&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;accessList&quot;</span>: [],</span><br><span class="line">        <span class="attr">&quot;blockHash&quot;</span>: <span class="string">&quot;0x28c1de373975f51eeaea73ab46bb900ffc9c2b63199eda739b7053ed51720c1a&quot;</span>, <span class="comment">// 交易所在块的哈希，挂起块为null</span></span><br><span class="line">        <span class="attr">&quot;blockNumber&quot;</span>: <span class="string">&quot;0xd6c9aa&quot;</span>, <span class="comment">// 交易所在块的编号，挂起块为null</span></span><br><span class="line">        <span class="attr">&quot;chainId&quot;</span>: <span class="string">&quot;0x1&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;from&quot;</span>: <span class="string">&quot;0x3c29081b8898f1095d1ba0b2e05eacd45fda61bd&quot;</span>, <span class="comment">// 交易发送方地址</span></span><br><span class="line">        <span class="attr">&quot;gas&quot;</span>: <span class="string">&quot;0x8c746&quot;</span>, <span class="comment">// 发送方提供的gas可用量</span></span><br><span class="line">        <span class="attr">&quot;gasPrice&quot;</span>: <span class="string">&quot;0x30969e0d37&quot;</span>, <span class="comment">// 发送方提供的gas价格</span></span><br><span class="line">        <span class="attr">&quot;hash&quot;</span>: <span class="string">&quot;0x0f4f3fa3bc04b53feaf6a12d0112cf33a2449727d35f4d5b1fb7541fe3c896e4&quot;</span>, <span class="comment">// 交易哈希</span></span><br><span class="line">        <span class="attr">&quot;input&quot;</span>: <span class="string">&quot;0xa0050....5b43d&quot;</span>, <span class="comment">// 随交易发送的数据</span></span><br><span class="line">        <span class="attr">&quot;maxFeePerGas&quot;</span>: <span class="string">&quot;0x310da2876d&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;maxPriorityFeePerGas&quot;</span>: <span class="string">&quot;0x218de4ff2&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;nonce&quot;</span>: <span class="string">&quot;0xa1&quot;</span>, <span class="comment">// 本次交易之前发送方已经生成的交易数量</span></span><br><span class="line">        <span class="attr">&quot;r&quot;</span>: <span class="string">&quot;0xba242a077779245b4e5ea0692c3aa64fb8304602b80634c4dd51b1ac94d32322&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;s&quot;</span>: <span class="string">&quot;0x617828cfb4ed14373643aeae1ba9adde0d5294e65a7549d9ecc87f351ecdf8a7&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;to&quot;</span>: <span class="string">&quot;0xa10fca31a2cb432c9ac976779dc947cfdb003ef0&quot;</span>, <span class="comment">// 交易接收方地址</span></span><br><span class="line">        <span class="attr">&quot;transactionIndex&quot;</span>: <span class="string">&quot;0x0&quot;</span>, <span class="comment">// 交易在块中的索引位置，挂起块为null</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;0x2&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;v&quot;</span>: <span class="string">&quot;0x0&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;value&quot;</span>: <span class="string">&quot;0x0&quot;</span> <span class="comment">// 发送的以太数量</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-getTransactionByBlockHashAndIndex"><a href="#✔eth-getTransactionByBlockHashAndIndex" class="headerlink" title="✔eth_getTransactionByBlockHashAndIndex"></a>✔eth_getTransactionByBlockHashAndIndex</h3><p>返回指定哈希的块内指定索引序号的交易。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getTransactionByBlockHashAndIndex&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x28c1de373975f51eeaea73ab46bb900ffc9c2b63199eda739b7053ed51720c1a&quot;</span>,</span><br><span class="line">        <span class="string">&quot;0x0&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<p>同 <a href="#eth_getBlockByHash">eth_getBlockByHash</a></p>
+<h3 id="✔eth-getTransactionByBlockNumberAndIndex"><a href="#✔eth-getTransactionByBlockNumberAndIndex" class="headerlink" title="✔eth_getTransactionByBlockNumberAndIndex"></a>✔eth_getTransactionByBlockNumberAndIndex</h3><p>返回指定编号的块内指定索引序号的交易。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getTransactionByBlockNumberAndIndex&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0xD6C9AA&quot;</span>,</span><br><span class="line">        <span class="string">&quot;0x0&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<p>同 <a href="#eth_getBlockByHash">eth_getBlockByHash</a></p>
+<h3 id="✔eth-getTransactionReceipt"><a href="#✔eth-getTransactionReceipt" class="headerlink" title="✔eth_getTransactionReceipt"></a>✔eth_getTransactionReceipt</h3><p>返回指定哈希的交易的收据，挂起的交易其收据无效。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getTransactionReceipt&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x0f4f3fa3bc04b53feaf6a12d0112cf33a2449727d35f4d5b1fb7541fe3c896e4&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;blockHash&quot;</span>: <span class="string">&quot;0x28c1de373975f51eeaea73ab46bb900ffc9c2b63199eda739b7053ed51720c1a&quot;</span>, <span class="comment">// 交易所在块的哈希</span></span><br><span class="line">        <span class="attr">&quot;blockNumber&quot;</span>: <span class="string">&quot;0xd6c9aa&quot;</span>, <span class="comment">// 交易所在块的编号</span></span><br><span class="line">        <span class="attr">&quot;contractAddress&quot;</span>: <span class="literal">null</span>, <span class="comment">// 对于合约创建交易，该值为新创建的合约地址，否则为null</span></span><br><span class="line">        <span class="attr">&quot;cumulativeGasUsed&quot;</span>: <span class="string">&quot;0x68fbd&quot;</span>, <span class="comment">// 交易所在块消耗的gas总量</span></span><br><span class="line">        <span class="attr">&quot;effectiveGasPrice&quot;</span>: <span class="string">&quot;0x30969e0d37&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;from&quot;</span>: <span class="string">&quot;0x3c29081b8898f1095d1ba0b2e05eacd45fda61bd&quot;</span>, <span class="comment">// 交易发送方地址</span></span><br><span class="line">        <span class="attr">&quot;gasUsed&quot;</span>: <span class="string">&quot;0x68fbd&quot;</span>, <span class="comment">// 该次交易消耗的gas用量</span></span><br><span class="line">        <span class="attr">&quot;logs&quot;</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;address&quot;</span>: <span class="string">&quot;0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;blockHash&quot;</span>: <span class="string">&quot;0x28c1de373975f51eeaea73ab46bb900ffc9c2b63199eda739b7053ed51720c1a&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;blockNumber&quot;</span>: <span class="string">&quot;0xd6c9aa&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;data&quot;</span>: <span class="string">&quot;0x0000000000000000000000000000000000000000000000000000000b7a3400e3&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;logIndex&quot;</span>: <span class="string">&quot;0x0&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;removed&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">&quot;topics&quot;</span>: [</span><br><span class="line">                    <span class="string">&quot;0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;0x00000000000000000000000088e6a0c2ddd26feeb64f039a2c41296fcb3f5640&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;0x000000000000000000000000a10fca31a2cb432c9ac976779dc947cfdb003ef0&quot;</span></span><br><span class="line">                ],</span><br><span class="line">                <span class="attr">&quot;transactionHash&quot;</span>: <span class="string">&quot;0x0f4f3fa3bc04b53feaf6a12d0112cf33a2449727d35f4d5b1fb7541fe3c896e4&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;transactionIndex&quot;</span>: <span class="string">&quot;0x0&quot;</span></span><br><span class="line">            &#125;,</span><br><span class="line">        ], <span class="comment">// 本次交易生成的日志对象数组</span></span><br><span class="line">        <span class="attr">&quot;logsBloom&quot;</span>: <span class="string">&quot;0x0000....4080&quot;</span>, <span class="comment">// bloom过滤器，便于轻节点快速提取相关日志</span></span><br><span class="line">        <span class="attr">&quot;status&quot;</span>: <span class="string">&quot;0x1&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;to&quot;</span>: <span class="string">&quot;0xa10fca31a2cb432c9ac976779dc947cfdb003ef0&quot;</span>, <span class="comment">// 交易接收方地址，对于合约创建交易该值为null</span></span><br><span class="line">        <span class="attr">&quot;transactionHash&quot;</span>: <span class="string">&quot;0x0f4f3fa3bc04b53feaf6a12d0112cf33a2449727d35f4d5b1fb7541fe3c896e4&quot;</span>, <span class="comment">// 交易哈希</span></span><br><span class="line">        <span class="attr">&quot;transactionIndex&quot;</span>: <span class="string">&quot;0x0&quot;</span>, <span class="comment">// 交易在块内的索引序号</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;0x2&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-getUncleByBlockHashAndIndex"><a href="#✔eth-getUncleByBlockHashAndIndex" class="headerlink" title="✔eth_getUncleByBlockHashAndIndex"></a>✔eth_getUncleByBlockHashAndIndex</h3><p>返回指定哈希的块指定索引位置的叔伯。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getUncleByBlockHashAndIndex&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x0f4f3fa3bc04b53feaf6a12d0112cf33a2449727d35f4d5b1fb7541fe3c896e4&quot;</span>,</span><br><span class="line">        <span class="string">&quot;0x0&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="literal">null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-getUncleByBlockNumberAndIndex"><a href="#✔eth-getUncleByBlockNumberAndIndex" class="headerlink" title="✔eth_getUncleByBlockNumberAndIndex"></a>✔eth_getUncleByBlockNumberAndIndex</h3><p>返回指定编号的块内指定索引序号的叔伯。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getUncleByBlockNumberAndIndex&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0xD6C9AA&quot;</span>,</span><br><span class="line">        <span class="string">&quot;0x0&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="literal">null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌eth-getCompilers"><a href="#❌eth-getCompilers" class="headerlink" title="❌eth_getCompilers"></a>❌eth_getCompilers</h3><p>返回客户端中有效的编译器列表。<strong>不可用。</strong></p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getCompilers&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;error&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;code&quot;</span>: <span class="number">-32601</span>,</span><br><span class="line">        <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;the method eth_getCompilers does not exist/is not available&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌eth-compileSolidity"><a href="#❌eth-compileSolidity" class="headerlink" title="❌eth_compileSolidity"></a>❌eth_compileSolidity</h3><p>返回编译后的solidity代码。<strong>不可用。</strong></p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_compileSolidity&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;contract test &#123; function multiply(uint a) returns(uint d) &#123; return a * 7; &#125; &#125;&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;error&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;code&quot;</span>: <span class="number">-32601</span>,</span><br><span class="line">        <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;the method eth_compileSolidity does not exist/is not available&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌eth-compileLLL"><a href="#❌eth-compileLLL" class="headerlink" title="❌eth_compileLLL"></a>❌eth_compileLLL</h3><p>返回编译后的LLL代码。<strong>不可用。</strong></p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_compileLLL&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;(returnlll (suicide (caller)))&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;error&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;code&quot;</span>: <span class="number">-32601</span>,</span><br><span class="line">        <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;the method eth_compileLLL does not exist/is not available&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌eth-compileSerpent"><a href="#❌eth-compileSerpent" class="headerlink" title="❌eth_compileSerpent"></a>❌eth_compileSerpent</h3><p>返回编译后的Serpent代码。<strong>不可用。</strong></p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_compileSerpent&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;/* some serpent */&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;error&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;code&quot;</span>: <span class="number">-32601</span>,</span><br><span class="line">        <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;the method eth_compileSerpent does not exist/is not available&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-newFilter"><a href="#✔eth-newFilter" class="headerlink" title="✔eth_newFilter"></a>✔eth_newFilter</h3><p>基于给定的选项创建一个过滤器对象，接收状态变化时的通知。可用。</p>
+<p>假定一个交易的主题为<code>[A, B]</code>，该主题会被以下过滤器匹配：</p>
+<ul>
+<li><code>[]</code> 任何主题</li>
+<li><code>[A]</code> 第一个主题为A，第二个主题不限</li>
+<li><code>[null, B]</code> 第一个主题不限，第二个主题为B</li>
+<li><code>[A, B]</code> 第一个主题为A，第二个主题为B</li>
+<li><code>[[A, B], [B, C]]</code> 第一个主题为A或B，第二个主题为B或C</li>
+</ul>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_newFilter&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">&quot;fromBlock&quot;</span>: <span class="string">&quot;0xd6c9aa&quot;</span>, <span class="comment">// 整数块编号或者&quot;latest&quot;、&quot;pending&quot;、&quot;earliest&quot;，可选，默认值&quot;latest&quot;。</span></span><br><span class="line">            <span class="attr">&quot;toBlock&quot;</span>: <span class="string">&quot;0xd6c9ab&quot;</span>, <span class="comment">// 整数块编号或者&quot;latest&quot;、&quot;pending&quot;、&quot;earliest&quot;，可选，默认值&quot;latest&quot;。</span></span><br><span class="line">            <span class="comment">//&quot;address&quot;: 合约地址或生成日志的一组地址，可选</span></span><br><span class="line">            <span class="attr">&quot;topics&quot;</span>: [] <span class="comment">// 主题数组，可选</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0xffe210b5c962996a6664dc1ebc9eb05b&quot;</span> <span class="comment">// 过滤器编号</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌eth-newBlockFilter"><a href="#❌eth-newBlockFilter" class="headerlink" title="❌eth_newBlockFilter"></a>❌eth_newBlockFilter</h3><p>创建过滤器，当新块生成时进行通知。<strong>不可用。</strong></p>
+<p>可以成功创建过滤器，但由于可能尚未跟上主网的出块速度，查询过滤器无法得到日志。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_newBlockFilter&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0xbeb626deabcdf93d2167cdb27ad6d230&quot;</span> <span class="comment">// 过滤器编号</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌eth-newPendingTransactionFilter"><a href="#❌eth-newPendingTransactionFilter" class="headerlink" title="❌eth_newPendingTransactionFilter"></a>❌eth_newPendingTransactionFilter</h3><p>创建过滤器，当产生挂起交易时进行通知。 <strong>不可用。</strong></p>
+<p>可以成功创建过滤器，但查询过滤器无法得到日志。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_newPendingTransactionFilter&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0xb7303ea3aeab1d706126ecaac9dcfc25&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-uninstallFilter"><a href="#✔eth-uninstallFilter" class="headerlink" title="✔eth_uninstallFilter"></a>✔eth_uninstallFilter</h3><p>卸载指定编号的过滤器。可用。</p>
+<p>注意，过滤器在一定时间内若未接收到<code>eth_getFilterChanges</code>调用，则会自动超时。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_uninstallFilter&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0x5c005232da23c8f5705623c81d415989&quot;</span> <span class="comment">// 过滤器编号</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="literal">true</span> <span class="comment">// 是否成功卸载</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-getFilterChanges"><a href="#✔eth-getFilterChanges" class="headerlink" title="✔eth_getFilterChanges"></a>✔eth_getFilterChanges</h3><p>查询指定的过滤器，返回自上次查询之后新生成的日志数组。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getFilterChanges&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0xffe210b5c962996a6664dc1ebc9eb05b&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-getFilterLogs"><a href="#✔eth-getFilterLogs" class="headerlink" title="✔eth_getFilterLogs"></a>✔eth_getFilterLogs</h3><p>返回指定编号过滤器中的全部日志。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getFilterLogs&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;0xffe210b5c962996a6664dc1ebc9eb05b&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">&quot;address&quot;</span>: <span class="string">&quot;0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;blockHash&quot;</span>: <span class="string">&quot;0x28c1de373975f51eeaea73ab46bb900ffc9c2b63199eda739b7053ed51720c1a&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;blockNumber&quot;</span>: <span class="string">&quot;0xd6c9aa&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;data&quot;</span>: <span class="string">&quot;0x0000000000000000000000000000000000000000000000000000000b7a3400e3&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;logIndex&quot;</span>: <span class="string">&quot;0x0&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;removed&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">&quot;topics&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef&quot;</span>,</span><br><span class="line">                <span class="string">&quot;0x00000000000000000000000088e6a0c2ddd26feeb64f039a2c41296fcb3f5640&quot;</span>,</span><br><span class="line">                <span class="string">&quot;0x000000000000000000000000a10fca31a2cb432c9ac976779dc947cfdb003ef0&quot;</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="attr">&quot;transactionHash&quot;</span>: <span class="string">&quot;0x0f4f3fa3bc04b53feaf6a12d0112cf33a2449727d35f4d5b1fb7541fe3c896e4&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;transactionIndex&quot;</span>: <span class="string">&quot;0x0&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        ......</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✔eth-getLogs"><a href="#✔eth-getLogs" class="headerlink" title="✔eth_getLogs"></a>✔eth_getLogs</h3><p>返回匿名过滤器中的所有日志。可用。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getLogs&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">&quot;fromBlock&quot;</span>: <span class="string">&quot;0xd6c9aa&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;toBlock&quot;</span>: <span class="string">&quot;0xd6c9ab&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;topics&quot;</span>: []</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<p>同 <a href="#eth_getFilterLogs">eth_getFilterLogs</a></p>
+<h3 id="❌-eth-getWork"><a href="#❌-eth-getWork" class="headerlink" title="❌   eth_getWork"></a>❌   eth_getWork</h3><p>返回当前块的哈希、种子哈希、以及要满足的边界条件，即目标。<strong>不可用。</strong></p>
+<p>可能是因为节点并不在挖矿。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_getWork&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;error&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;code&quot;</span>: <span class="number">-32000</span>,</span><br><span class="line">        <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;no mining work available yet&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❓eth-submitWork"><a href="#❓eth-submitWork" class="headerlink" title="❓eth_submitWork"></a>❓eth_submitWork</h3><p>用于提交POW解决方案。暂未测试。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="❓eth-submitHashrate"><a href="#❓eth-submitHashrate" class="headerlink" title="❓eth_submitHashrate"></a>❓eth_submitHashrate</h3><p>用于提交挖矿的哈希速率。暂未测试。</p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="❌eth-blockNumber"><a href="#❌eth-blockNumber" class="headerlink" title="❌eth_blockNumber"></a>❌eth_blockNumber</h3><p>返回最新块的编号。<strong>不可用。</strong></p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;eth_blockNumber&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>: <span class="string">&quot;0x0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="db"><a href="#db" class="headerlink" title="db"></a>db</h2><p>数据库相关操作。<strong>均已被废弃。</strong></p>
+<h3 id="❌db-putString"><a href="#❌db-putString" class="headerlink" title="❌db_putString"></a>❌db_putString</h3><p>在本地数据库中存入字符串。<strong>已被废弃。</strong></p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;db_putString&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;testDB&quot;</span>,</span><br><span class="line">        <span class="string">&quot;myKey&quot;</span>,</span><br><span class="line">        <span class="string">&quot;myString&quot;</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;error&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;code&quot;</span>: <span class="number">-32601</span>,</span><br><span class="line">        <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;the method db_putString does not exist/is not available&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌db-getString"><a href="#❌db-getString" class="headerlink" title="❌db_getString"></a>❌db_getString</h3><p>从本地数据库读取字符串。<strong>已被废弃。</strong></p>
+<h3 id="❌db-putHex"><a href="#❌db-putHex" class="headerlink" title="❌db_putHex"></a>❌db_putHex</h3><p>将二进制数据写入本地数据库。<strong>已被废弃。</strong></p>
+<h3 id="❌db-getHex"><a href="#❌db-getHex" class="headerlink" title="❌db_getHex"></a>❌db_getHex</h3><p>从本地数据库中读取二进制数据。<strong>已被废弃。</strong></p>
+<h2 id="shh"><a href="#shh" class="headerlink" title="shh"></a>shh</h2><p><a target="_blank" rel="noopener" href="https://eth.wiki/concepts/whisper/whisper">Whisper协议</a> 相关。<strong>均不可用。</strong></p>
+<h3 id="❌shh-version"><a href="#❌shh-version" class="headerlink" title="❌shh_version"></a>❌shh_version</h3><p>返回当前的whisper协议版本。<strong>不可用。</strong></p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;shh_version&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;error&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;code&quot;</span>: <span class="number">-32601</span>,</span><br><span class="line">        <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;the method shh_version does not exist/is not available&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌shh-post"><a href="#❌shh-post" class="headerlink" title="❌shh_post"></a>❌shh_post</h3><p>发送whisper消息。<strong>不可用。</strong></p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;shh_post&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">&quot;payload&quot;</span>: <span class="string">&quot;0x7b2274797065223a226d6&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;priority&quot;</span>: <span class="string">&quot;0x64&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;topics&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;0x776869737065722d636861742d636c69656e74&quot;</span>,</span><br><span class="line">                <span class="string">&quot;0x4d5a695276454c39425154466b61693532&quot;</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="attr">&quot;ttl&quot;</span>: <span class="string">&quot;0x64&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;error&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;code&quot;</span>: <span class="number">-32601</span>,</span><br><span class="line">        <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;the method shh_post does not exist/is not available&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌shh-newIdentity"><a href="#❌shh-newIdentity" class="headerlink" title="❌shh_newIdentity"></a>❌shh_newIdentity</h3><p>在客户端创建一个新的whisper身份标识。<strong>不可用。</strong></p>
+<p>请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;shh_newIdentity&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;params&quot;</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;error&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;code&quot;</span>: <span class="number">-32601</span>,</span><br><span class="line">        <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;the method shh_newIdentity does not exist/is not available&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span>: <span class="string">&quot;2.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❌shh-hasIdentity"><a href="#❌shh-hasIdentity" class="headerlink" title="❌shh_hasIdentity"></a>❌shh_hasIdentity</h3><p>检查客户端是否持有指定身份标识的私钥。<strong>不可用。</strong></p>
+<h3 id="❌shh-newGroup"><a href="#❌shh-newGroup" class="headerlink" title="❌shh_newGroup"></a>❌shh_newGroup</h3><p>创建分组。<strong>不可用。</strong></p>
+<h3 id="❌shh-addToGroup"><a href="#❌shh-addToGroup" class="headerlink" title="❌shh_addToGroup"></a>❌shh_addToGroup</h3><p>将指定身份标识加入分组。 <strong>不可用。</strong></p>
+<h3 id="❌shh-newFilter"><a href="#❌shh-newFilter" class="headerlink" title="❌shh_newFilter"></a>❌shh_newFilter</h3><p>创建一个过滤器，以便在客户端接收到匹配的whisper消息时进行通知。 <strong>不可用。</strong></p>
+<h3 id="❌shh-uninstallFilter"><a href="#❌shh-uninstallFilter" class="headerlink" title="❌shh_uninstallFilter"></a>❌shh_uninstallFilter</h3><p>卸载指定编号的过滤器 <strong>不可用。</strong></p>
+<h3 id="❌shh-getFilterChanges"><a href="#❌shh-getFilterChanges" class="headerlink" title="❌shh_getFilterChanges"></a>❌shh_getFilterChanges</h3><p>询问Whisper过滤器，返回自上次询问后的新消息。 <strong>不可用。</strong></p>
+<h3 id="❌shh-getMessages"><a href="#❌shh-getMessages" class="headerlink" title="❌shh_getMessages"></a>❌shh_getMessages</h3><p>读取指定过滤器的所有消息。 <strong>不可用。</strong></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="ほしぞら　りん 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="ほしぞら　りん 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/images/bitcoin.png" alt="ほしぞら　りん 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ETH/" rel="tag"><i class="fa fa-tag"></i> ETH</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/perpetual-contract-note/" rel="prev" title="永续合约学习笔记">
+                  <i class="fa fa-chevron-left"></i> 永续合约学习笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/eth1-node/" rel="next" title="ETH1.0节点维护记录">
+                  ETH1.0节点维护记录 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">湘ICP备2021014771号 </a>
+      <img src="/images/beian.png" alt=""><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=43010302001425" rel="noopener" target="_blank">湘公网安备43010302001425号 </a>
+  </div>
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ほしぞら　りん</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

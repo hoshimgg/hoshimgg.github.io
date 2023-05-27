@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/rin.png">
+  <link rel="mask-icon" href="/images/rin.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"miaoguoge.xyz","root":"/","images":"/images","scheme":"Gemini","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="chflags改变文件标签是怎么回事呢？chflags hidden可以隐藏文件相信大家都很熟悉，但是chflags改变文件标签是怎么回事呢，下面就让小编带大家一起了解吧。　　chflags，其实就是change flags的缩写，大家可能会很惊讶chflags怎么会改变文件标签呢？但事实就是这样，小编也感到非常惊讶。下面就让小编带你们一起了解chflags的用法吧！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="macOS上chflags用法详解（纯干货，全网最全！）">
+<meta property="og:url" content="http://miaoguoge.xyz/chflags-onMac/index.html">
+<meta property="og:site_name" content="星空凛的博客">
+<meta property="og:description" content="chflags改变文件标签是怎么回事呢？chflags hidden可以隐藏文件相信大家都很熟悉，但是chflags改变文件标签是怎么回事呢，下面就让小编带大家一起了解吧。　　chflags，其实就是change flags的缩写，大家可能会很惊讶chflags怎么会改变文件标签呢？但事实就是这样，小编也感到非常惊讶。下面就让小编带你们一起了解chflags的用法吧！">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/a9b44fde43c568065f4f4e8182de6bcde378c365.png">
+<meta property="article:published_time" content="2020-06-10T10:29:48.000Z">
+<meta property="article:modified_time" content="2021-09-27T07:30:24.498Z">
+<meta property="article:author" content="ほしぞら　りん">
+<meta property="article:tag" content="命令行">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i0.hdslb.com/bfs/album/a9b44fde43c568065f4f4e8182de6bcde378c365.png">
+
+
+<link rel="canonical" href="http://miaoguoge.xyz/chflags-onMac/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://miaoguoge.xyz/chflags-onMac/","path":"chflags-onMac/","title":"macOS上chflags用法详解（纯干货，全网最全！）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>macOS上chflags用法详解（纯干货，全网最全！） | 星空凛的博客</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+  <meta name="referrer" content="no-referrer">
+<link rel="alternate" href="/atom.xml" title="星空凛的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">星空凛的博客</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我凛最可爱</p>
+      <img class="custom-logo-image" src="/images/rin2.png" alt="星空凛的博客">
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="nav-text">第一个参数（可选）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="nav-text">第二个参数（可选）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%88%E5%BF%85%E9%A1%BB%EF%BC%89"><span class="nav-text">第三个参数（必须）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#arch-x2F-archived"><span class="nav-text">arch&#x2F;archived</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#opaque"><span class="nav-text">opaque</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nodump"><span class="nav-text">nodump</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sappnd-x2F-sappend"><span class="nav-text">sappnd&#x2F;sappend</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uappnd-x2F-uappend"><span class="nav-text">uappnd&#x2F;uappend</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#schg-x2F-schange-x2F-simmutable"><span class="nav-text">schg&#x2F;schange&#x2F;simmutable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uchg-x2F-uchange-x2F-uimmutable"><span class="nav-text">uchg&#x2F;uchange&#x2F;uimmutable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hidden"><span class="nav-text">hidden</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sunlink"><span class="nav-text">sunlink</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A5%E4%B8%8A%E6%89%80%E6%9C%89%E7%9A%84%E5%8F%82%E6%95%B0%EF%BC%8C%E5%9D%87%E5%8F%AF%E4%BB%A5%E5%9C%A8%E5%89%8D%E9%9D%A2%E5%8A%A0%E4%B8%8Ano%E6%9D%A5%E6%92%A4%E9%94%80%EF%BC%88%E5%A6%82nohidden%EF%BC%8Cnodump%E6%98%AF%E5%8E%BB%E6%8E%89no%EF%BC%89"><span class="nav-text">以上所有的参数，均可以在前面加上no来撤销（如nohidden，nodump是去掉no）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E4%B8%AA%E5%8F%82%E6%95%B0"><span class="nav-text">第四个参数</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ほしぞら　りん"
+      src="/images/rin.png">
+  <p class="site-author-name" itemprop="name">ほしぞら　りん</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hoshimgg" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hoshimgg" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hoshimgg@outlook.com" title="E-Mail → mailto:hoshimgg@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/miaoguoge" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;miaoguoge" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/hoshizora.rin.777" title="Facebook → https:&#x2F;&#x2F;www.facebook.com&#x2F;hoshizora.rin.777" rel="noopener" target="_blank"><i class="fab fa-facebook fa-fw"></i>Facebook</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://orangecheers.top/" title="https:&#x2F;&#x2F;orangecheers.top&#x2F;" rel="noopener" target="_blank">果果</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yanlc39.github.io/" title="https:&#x2F;&#x2F;yanlc39.github.io&#x2F;" rel="noopener" target="_blank">北原春希</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lee-tc.github.io/" title="https:&#x2F;&#x2F;lee-tc.github.io&#x2F;" rel="noopener" target="_blank">hbltc</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hoshimgg" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://miaoguoge.xyz/chflags-onMac/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rin.png">
+      <meta itemprop="name" content="ほしぞら　りん">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="星空凛的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          macOS上chflags用法详解（纯干货，全网最全！）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-06-10 18:29:48" itemprop="dateCreated datePublished" datetime="2020-06-10T18:29:48+08:00">2020-06-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Apple/" itemprop="url" rel="index"><span itemprop="name">Apple</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>　　chflags改变文件标签是怎么回事呢？chflags hidden可以隐藏文件相信大家都很熟悉，但是chflags改变文件标签是怎么回事呢，下面就让小编带大家一起了解吧。<br>　　chflags，其实就是change flags的缩写，大家可能会很惊讶chflags怎么会改变文件标签呢？但事实就是这样，小编也感到非常惊讶。下面就让小编带你们一起了解chflags的用法吧！</p>
+<span id="more"></span>
+
+<p>首先直接在终端中输入chflags，可以看到它出现了chflags命令的使用格式：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/a9b44fde43c568065f4f4e8182de6bcde378c365.png"></p>
+<h2 id="第一个参数（可选）"><a href="#第一个参数（可选）" class="headerlink" title="第一个参数（可选）"></a>第一个参数（可选）</h2><p>-f    即使chflags无法修改此文件的标志，也不显示错误&#x2F;诊断信息。</p>
+<p>-h    如果该文件是一个symbolic link（符号链接，macOS下叫做“替身”），那么仅仅修改符号链接自身，而不去修改它指向的文件。</p>
+<p>-v    在执行操作后显示被操作的文件名</p>
+<h2 id="第二个参数（可选）"><a href="#第二个参数（可选）" class="headerlink" title="第二个参数（可选）"></a>第二个参数（可选）</h2><p>-R    将指定的文件&#x2F;目录作为根，递归处理。在对整个文件夹操作时需要附带。</p>
+<p>在指定-R参数后还可以附加指定下列参数：</p>
+<p>-H    跟随命令行中的符号链接，但是不跟随目录树遍历过程中的符号链接。</p>
+<p>-L    跟随所有的符号链接。</p>
+<p>-P    不跟随所有的符号链接。</p>
+<h2 id="第三个参数（必须）"><a href="#第三个参数（必须）" class="headerlink" title="第三个参数（必须）"></a>第三个参数（必须）</h2><p>文件标志，共有以下9种：</p>
+<h3 id="arch-x2F-archived"><a href="#arch-x2F-archived" class="headerlink" title="arch&#x2F;archived"></a>arch&#x2F;archived</h3><p><em>必须使用sudo或 root账户</em></p>
+<p>归档标志。貌似没什么用？</p>
+<p>百度百科就一句话：归档标志是让计算机能够识别该收文有没有经过归档处理的标记。</p>
+<p>不过貌似在拷贝文件到switch上时要对SD卡执行一次。</p>
+<h3 id="opaque"><a href="#opaque" class="headerlink" title="opaque"></a>opaque</h3><p>不透明标志。貌似没什么用？</p>
+<p>帮助页面的原话是Directory is opaque when viewed through a union mount.</p>
+<p>我是没看懂这啥意思，我分别尝试了给一个目录和一个文本加了此标志，感觉不出任何区别，无论是GUI还是命令行。</p>
+<h3 id="nodump"><a href="#nodump" class="headerlink" title="nodump"></a>nodump</h3><p>禁止备份标志。在mac上我猜是给时间机器用的。</p>
+<p>日常使用下，GUI和命令行无变化。</p>
+<h3 id="sappnd-x2F-sappend"><a href="#sappnd-x2F-sappend" class="headerlink" title="sappnd&#x2F;sappend"></a>sappnd&#x2F;sappend</h3><p><em>必须使用sudo或 root账户</em></p>
+<p>使得文件只能以附加的方式修改。</p>
+<p>在GUI中表现为文件被锁定且无法解锁，提示“您不是该文件的所有者”。</p>
+<p>非root用户重命名和删除时系统提示需要验证身份，但是验证之后依然无法进行操作，提示没有权限。</p>
+<p>简介中文件所有者显示为“系统”。</p>
+<p>在命令行中使用<code>ls -l</code>查看权限无变化，无法使用<code>&gt;</code>写入文件，但是可以使用<code>&gt;&gt;</code>将内容附加在文件最后。</p>
+<h3 id="uappnd-x2F-uappend"><a href="#uappnd-x2F-uappend" class="headerlink" title="uappnd&#x2F;uappend"></a>uappnd&#x2F;uappend</h3><p>功能同sappnd。但可以不以root身份执行。</p>
+<p>使得文件只能以附加的方式修改。</p>
+<p>在GUI中表现为文件被锁定，尝试修改时提示解锁，但解锁会失败。</p>
+<p>非root用户重命名和删除时系统提示需要验证身份，但是验证之后依然无法进行操作，提示没有权限。</p>
+<p>简介中无变化。</p>
+<p>在命令行中使用<code>ls -l</code>查看权限无变化，无法使用<code>&gt;</code>写入文件，但是可以使用<code>&gt;&gt;</code>将内容附加在文件最后。</p>
+<h3 id="schg-x2F-schange-x2F-simmutable"><a href="#schg-x2F-schange-x2F-simmutable" class="headerlink" title="schg&#x2F;schange&#x2F;simmutable"></a>schg&#x2F;schange&#x2F;simmutable</h3><p><em>必须使用sudo或 root账户</em></p>
+<p><strong>完全锁死文件。</strong></p>
+<p>在GUI中表现为文件被锁定且无法解锁，无提示。</p>
+<p>无法重命名文件也无法删除，<strong>即使是使用sudo或root账户也不行。</strong></p>
+<p>简介中没有异常，文件所有者为用户自身，但是无法更改任何权限。</p>
+<p>命令行中权限无变化。无法使用<code>&gt;</code>和<code>&gt;&gt;</code>操作文件。</p>
+<h3 id="uchg-x2F-uchange-x2F-uimmutable"><a href="#uchg-x2F-uchange-x2F-uimmutable" class="headerlink" title="uchg&#x2F;uchange&#x2F;uimmutable"></a>uchg&#x2F;uchange&#x2F;uimmutable</h3><p>功能同schg，但可以不以root身份执行。</p>
+<p><strong>完全锁死文件。</strong></p>
+<p>在GUI中表现为文件被锁定，<strong>但是可以解锁。</strong></p>
+<p>无法重命名文件，但是可以删除。删除前会有提示，无需验证身份。</p>
+<p>简介中没有异常，文件所有者为用户自身，但是无法更改任何权限。</p>
+<p>命令行中权限无变化。无法使用<code>&gt;</code>和<code>&gt;&gt;</code>操作文件。</p>
+<h3 id="hidden"><a href="#hidden" class="headerlink" title="hidden"></a>hidden</h3><p>最为人所熟知的参数，相信只要用macOS一段时间的用户都会，不细说了。</p>
+<h3 id="sunlink"><a href="#sunlink" class="headerlink" title="sunlink"></a>sunlink</h3><p><em>必须使用sudo或 root账户</em></p>
+<p>禁止删除文件，禁止重命名文件。（root用户不受限制）</p>
+<p>无法移动文件，只能复制，而且复制后的文件有着同样的标记。</p>
+<p>但是可以随意编辑文件内容。</p>
+<h3 id="以上所有的参数，均可以在前面加上no来撤销（如nohidden，nodump是去掉no）"><a href="#以上所有的参数，均可以在前面加上no来撤销（如nohidden，nodump是去掉no）" class="headerlink" title="以上所有的参数，均可以在前面加上no来撤销（如nohidden，nodump是去掉no）"></a>以上所有的参数，均可以在前面加上<code>no</code>来撤销（如<code>nohidden</code>，<code>nodump</code>是去掉<code>no</code>）</h3><h2 id="第四个参数"><a href="#第四个参数" class="headerlink" title="第四个参数"></a>第四个参数</h2><p>文件&#x2F;文件夹路径。</p>
+<p>　　以上就是关于chflags改变文件标签的事情了，大家有什么想法呢，欢迎在评论区告诉小编一起讨论哦！</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="ほしぞら　りん 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="ほしぞら　りん 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/images/bitcoin.png" alt="ほしぞら　りん 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%91%BD%E4%BB%A4%E8%A1%8C/" rel="tag"><i class="fa fa-tag"></i> 命令行</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2345-huorong/" rel="prev" title="火绒工程师对抗2345记录">
+                  <i class="fa fa-chevron-left"></i> 火绒工程师对抗2345记录
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/curl-sh-img/" rel="next" title="基于curl，使用shell脚本批量下载魔法快报图片">
+                  基于curl，使用shell脚本批量下载魔法快报图片 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">湘ICP备2021014771号 </a>
+      <img src="/images/beian.png" alt=""><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=43010302001425" rel="noopener" target="_blank">湘公网安备43010302001425号 </a>
+  </div>
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ほしぞら　りん</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

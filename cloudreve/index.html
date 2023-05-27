@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/rin.png">
+  <link rel="mask-icon" href="/images/rin.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"miaoguoge.xyz","root":"/","images":"/images","scheme":"Gemini","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="感谢Orange Cheers提供的白嫖服务器！  之前一直想搞一个私有云，正好现在有了第二台免费的服务器，可以自由折腾了。 在比较了多款私有云软件后，我选择了Cloudreve，主要的原因就是它的UI设计十分美观，部署也较为简便。这里有官网提供的演示demo：https:&#x2F;&#x2F;demo.cloudreve.org&#x2F; 因为已经有过一款Linux的服务器了，这次我就尝试一下Windows的服务器。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用cloudreve搭建私有云">
+<meta property="og:url" content="http://miaoguoge.xyz/cloudreve/index.html">
+<meta property="og:site_name" content="星空凛的博客">
+<meta property="og:description" content="感谢Orange Cheers提供的白嫖服务器！  之前一直想搞一个私有云，正好现在有了第二台免费的服务器，可以自由折腾了。 在比较了多款私有云软件后，我选择了Cloudreve，主要的原因就是它的UI设计十分美观，部署也较为简便。这里有官网提供的演示demo：https:&#x2F;&#x2F;demo.cloudreve.org&#x2F; 因为已经有过一款Linux的服务器了，这次我就尝试一下Windows的服务器。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/50c31cf597f0c014164bfce8bdeb5aac161d2e8e.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/9f450a4931e401eaf0f3199aee006aac33ea1f0d.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/250a36a0240484f6936c0594cbf3c1a6e3040193.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/4cfa379368e42d9fd57a058dd293193681f9ff52.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/0b9df89f44c9417314d0e12f8e78c7ce13c6881c.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/27f516a3db462b43e03670594806dc6b9783f3f9.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/30c92711787de63d98aee4bfeb862e4593f97ecf.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/ec7cef8dc23bf1d19d4652892ffafb1f119b3357.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/28310bea8970a2204e580de49f2aa80e101e2a71.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/96ef815a1de7bfda93551694cbe5eb70978d6f56.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/cae9a8b95a3923346a82c48cc993e721cd53cd69.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/d8bf0bb8b564bc1a3f1358b40875b7eef917883b.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/256c65bacd4882172e65b0228f99eee141f5c17d.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/2afd8fd643840b1fe9efdc077227d1fe606fdff0.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/ec518694267208fa2afdcc9d55724b528fb52bc4.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/2f08b20eaaec185503dd6e43dc740632b8bcc4f4.png">
+<meta property="article:published_time" content="2020-03-21T04:13:42.000Z">
+<meta property="article:modified_time" content="2021-08-04T16:46:40.657Z">
+<meta property="article:author" content="ほしぞら　りん">
+<meta property="article:tag" content="cloudreve">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i0.hdslb.com/bfs/album/50c31cf597f0c014164bfce8bdeb5aac161d2e8e.png">
+
+
+<link rel="canonical" href="http://miaoguoge.xyz/cloudreve/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://miaoguoge.xyz/cloudreve/","path":"cloudreve/","title":"使用cloudreve搭建私有云"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>使用cloudreve搭建私有云 | 星空凛的博客</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+  <meta name="referrer" content="no-referrer">
+<link rel="alternate" href="/atom.xml" title="星空凛的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">星空凛的博客</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我凛最可爱</p>
+      <img class="custom-logo-image" src="/images/rin2.png" alt="星空凛的博客">
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%BD%BF%E7%94%A8-Microsoft-Remote-Desktop-%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%A1%8C%E9%9D%A2"><span class="nav-text">1. 使用 Microsoft Remote Desktop 连接远程服务器桌面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%B8%8B%E8%BD%BD%E5%B9%B6%E4%BD%BF%E7%94%A8-PhPstudy-%E9%9B%86%E6%88%90%E7%8E%AF%E5%A2%83"><span class="nav-text">2.  下载并使用 PhPstudy 集成环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E4%B8%8B%E8%BD%BDcloudreve"><span class="nav-text">3. 下载cloudreve</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E9%85%8D%E7%BD%AEcloudreve"><span class="nav-text">4. 配置cloudreve</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E4%B8%AA%E6%80%A7%E5%8C%96%E9%85%8D%E7%BD%AE"><span class="nav-text">5. 个性化配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E6%9B%B4%E6%8D%A2%E5%B7%A6%E4%B8%8A%E8%A7%92%E7%BD%91%E7%AB%99logo"><span class="nav-text">5.1 更换左上角网站logo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E6%9B%B4%E6%8D%A2%E6%AC%A2%E8%BF%8E%E9%A1%B5%E8%83%8C%E6%99%AF"><span class="nav-text">5.2 更换欢迎页背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E6%9B%B4%E6%94%B9%E9%A6%96%E9%A1%B5%E6%96%87%E5%AD%97%E4%BF%A1%E6%81%AF"><span class="nav-text">5.3 更改首页文字信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E6%B7%BB%E5%8A%A0%E9%A1%B5%E8%84%9A%E6%B3%A8%E9%87%8A"><span class="nav-text">5.4 添加页脚注释</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-4-1-%E5%AE%9E%E7%8E%B0%E6%95%88%E6%9E%9C"><span class="nav-text">5.4.1 实现效果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-4-2-%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-text">5.4.2 实现方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-4-3-%E5%8E%9F%E7%90%86"><span class="nav-text">5.4.3 原理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Cloudreve%E7%9A%84%E4%B8%80%E4%BA%9BBug"><span class="nav-text">6. Cloudreve的一些Bug</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%AF%B9%E6%AD%A4Bug%E7%9A%84%E5%88%A9%E7%94%A8"><span class="nav-text">7. 对此Bug的利用</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ほしぞら　りん"
+      src="/images/rin.png">
+  <p class="site-author-name" itemprop="name">ほしぞら　りん</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hoshimgg" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hoshimgg" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hoshimgg@outlook.com" title="E-Mail → mailto:hoshimgg@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/miaoguoge" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;miaoguoge" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/hoshizora.rin.777" title="Facebook → https:&#x2F;&#x2F;www.facebook.com&#x2F;hoshizora.rin.777" rel="noopener" target="_blank"><i class="fab fa-facebook fa-fw"></i>Facebook</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://orangecheers.top/" title="https:&#x2F;&#x2F;orangecheers.top&#x2F;" rel="noopener" target="_blank">果果</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yanlc39.github.io/" title="https:&#x2F;&#x2F;yanlc39.github.io&#x2F;" rel="noopener" target="_blank">北原春希</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lee-tc.github.io/" title="https:&#x2F;&#x2F;lee-tc.github.io&#x2F;" rel="noopener" target="_blank">hbltc</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hoshimgg" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://miaoguoge.xyz/cloudreve/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rin.png">
+      <meta itemprop="name" content="ほしぞら　りん">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="星空凛的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用cloudreve搭建私有云
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-21 12:13:42" itemprop="dateCreated datePublished" datetime="2020-03-21T12:13:42+08:00">2020-03-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">服务器</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p><strong>感谢<a target="_blank" rel="noopener" href="http://orangecheers.top/about/">Orange Cheers</a>提供的白嫖服务器！</strong></p>
+</blockquote>
+<p>之前一直想搞一个私有云，正好现在有了第二台免费的服务器，可以自由折腾了。</p>
+<p>在比较了多款私有云软件后，我选择了Cloudreve，主要的原因就是它的UI设计十分美观，部署也较为简便。这里有官网提供的演示demo：<a target="_blank" rel="noopener" href="https://demo.cloudreve.org/">https://demo.cloudreve.org/</a></p>
+<p>因为已经有过一款Linux的服务器了，这次我就尝试一下Windows的服务器。</p>
+<p><em>服务器系统为Windows Server 2012 R2，本地系统为macOS Catalina。</em></p>
+<p><strong>因为要装的环境太多，我懒得一个一个安装，就直接使用了一个服务器管理面板，介意者可以跳过步骤二，自行安装Apache、MySQL、php。</strong></p>
+<h2 id="1-使用-Microsoft-Remote-Desktop-连接远程服务器桌面"><a href="#1-使用-Microsoft-Remote-Desktop-连接远程服务器桌面" class="headerlink" title="1. 使用 Microsoft Remote Desktop 连接远程服务器桌面"></a>1. 使用 Microsoft Remote Desktop 连接远程服务器桌面</h2><span id="more"></span>
+
+<p>不得不说微软十分良心，专门为mac用户打造一款远程桌面客户端，不过可惜的是在国区并不提供这款软件，因此我们需要一个美区的Apple ID，<del>(*之后我可能会写一篇如何申请美区Apple ID的文章)</del>登陆App Store，搜索Microsoft Remote Desktop，安装即可。</p>
+<p>然后添加一台PC：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/50c31cf597f0c014164bfce8bdeb5aac161d2e8e.png"></p>
+<img src="https://i0.hdslb.com/bfs/album/9f450a4931e401eaf0f3199aee006aac33ea1f0d.png" style="zoom:50%;" />
+
+<p>在这里输入您的服务器商提供的远程登录用户名（一般为Administrator）和密码：</p>
+<img src="https://i0.hdslb.com/bfs/album/250a36a0240484f6936c0594cbf3c1a6e3040193.png" style="zoom:50%;" />
+
+<p>添加之后点击右上角的编辑，点击Devices &amp; Audio，勾选Clipbroad，这样便可以共享剪贴板，方便以后的代码更改：</p>
+<img src="https://i0.hdslb.com/bfs/album/4cfa379368e42d9fd57a058dd293193681f9ff52.png" style="zoom:50%;" />
+
+<p>【可选】点击Folders可以将本地的一个文件夹映射到远程Windows主机，方便共享文件，不过对传输大文件不是很友好。建议设置一个，之后会用到。</p>
+<p>添加之后便可双击连接：</p>
+<img src="https://i0.hdslb.com/bfs/album/0b9df89f44c9417314d0e12f8e78c7ce13c6881c.png" style="zoom:50%;" />
+
+<p>连接后建议下载 Google Chrome 或其他主流浏览器，方便日后的服务器本地调试。</p>
+<h2 id="2-下载并使用-PhPstudy-集成环境"><a href="#2-下载并使用-PhPstudy-集成环境" class="headerlink" title="2.  下载并使用 PhPstudy 集成环境"></a>2.  下载并使用 PhPstudy 集成环境</h2><p>访问<a target="_blank" rel="noopener" href="http://www.xp.cn/">www.xp.cn</a> ，下载Windows版本的PhpStudy。</p>
+<p><img src="https://i0.hdslb.com/bfs/album/27f516a3db462b43e03670594806dc6b9783f3f9.png"></p>
+<p>安装完成后打开，在首页启动Apache和MySQL：</p>
+<p>*<strong>不推荐使用Nginx，如果执意使用，请查询Nginx for cloudreve 的伪静态写法。</strong></p>
+<img src="https://i0.hdslb.com/bfs/album/30c92711787de63d98aee4bfeb862e4593f97ecf.png" style="zoom:50%;" />
+
+<p>点击数据库，首先修改root密码：</p>
+<img src="https://i0.hdslb.com/bfs/album/ec7cef8dc23bf1d19d4652892ffafb1f119b3357.png" alt="8" style="zoom:50%;" />
+
+<p>然后创建一个新的数据库：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/28310bea8970a2204e580de49f2aa80e101e2a71.png"></p>
+<p>点击侧边栏的环境，安装php运行环境：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/96ef815a1de7bfda93551694cbe5eb70978d6f56.png"></p>
+<p>完成后在浏览器地址栏里输入并打开<code>localhost</code>，如果看到以下页面，则说明环境配置成功。</p>
+<img src="https://i0.hdslb.com/bfs/album/cae9a8b95a3923346a82c48cc993e721cd53cd69.png" style="zoom: 50%;" />
+
+<h2 id="3-下载cloudreve"><a href="#3-下载cloudreve" class="headerlink" title="3. 下载cloudreve"></a>3. 下载cloudreve</h2><p>在服务器中访问 <a target="_blank" rel="noopener" href="https://cloudreve.org/download.php">https://cloudreve.org/download.php</a> ，下载最新版本的安装包，将其解压在一个合适的地方（路径中最好不要有中文）</p>
+<h2 id="4-配置cloudreve"><a href="#4-配置cloudreve" class="headerlink" title="4. 配置cloudreve"></a>4. 配置cloudreve</h2><p>打开PhPstudy，点击侧边栏中的网站，先将默认的localhost的网站端口改为81（或其他，避免跟80端口冲突），然后点击创建网站。根目录选择cloudreve的解压目录。</p>
+<img src="https://i0.hdslb.com/bfs/album/d8bf0bb8b564bc1a3f1358b40875b7eef917883b.png" style="zoom:50%;" />
+
+<p>然后服务器端的配置基本完成了，切回本地，在本地浏览器中访问<code>您的域名/cloudreveinstaller</code> 进入cloudreve配置页面。正常的话除了最后两项可选的，都是满足的。</p>
+<p><em>如果感觉访问很慢，请关闭您的代理软件</em></p>
+<img src="https://i0.hdslb.com/bfs/album/256c65bacd4882172e65b0228f99eee141f5c17d.png" style="zoom:40%;" />
+
+<p>点击下一步，填写信息。</p>
+<p><img src="https://i0.hdslb.com/bfs/album/2afd8fd643840b1fe9efdc077227d1fe606fdff0.png"></p>
+<p>填写完成后开始安装即可。</p>
+<p>安装完成后，在本地电脑直接访问您的域名即可来到cloudreve的欢迎界面，点击登录，使用初始管理员账号<a href="mailto:&#97;&#x64;&#x6d;&#105;&#110;&#x40;&#99;&#108;&#111;&#x75;&#x64;&#114;&#x65;&#x76;&#x65;&#46;&#111;&#114;&#x67;">&#97;&#x64;&#x6d;&#105;&#110;&#x40;&#99;&#108;&#111;&#x75;&#x64;&#114;&#x65;&#x76;&#x65;&#46;&#111;&#114;&#x67;</a>，密码admin 登录，点击右上角头像，进入管理面板。</p>
+<img src="https://i0.hdslb.com/bfs/album/ec518694267208fa2afdcc9d55724b528fb52bc4.png" style="zoom:50%;" />
+
+<p>点击用户，更换管理员账号的邮箱及密码，根据自己喜好配置左侧每一项的设置。然后回到首页设置自己的用户头像等等。</p>
+<p><strong>至此，cloudreve已经可以投入使用了。</strong></p>
+<h2 id="5-个性化配置"><a href="#5-个性化配置" class="headerlink" title="5. 个性化配置"></a>5. 个性化配置</h2><h3 id="5-1-更换左上角网站logo"><a href="#5-1-更换左上角网站logo" class="headerlink" title="5.1 更换左上角网站logo"></a>5.1 更换左上角网站logo</h3><p>进入解压目录\static\img\，其中的logo_s.png就是欢迎页左上角的图标，备份之后，用自己的替换即可。注意带有透明度，否则会很难看。</p>
+<h3 id="5-2-更换欢迎页背景"><a href="#5-2-更换欢迎页背景" class="headerlink" title="5.2 更换欢迎页背景"></a>5.2 更换欢迎页背景</h3><p>进入解压目录\static\img\，其中的output.jpg就是欢迎页的背景，备份之后，用自己的替换即可。注意图片大小不要太大，控制在100kb左右，防止加载太长时间。</p>
+<h3 id="5-3-更改首页文字信息"><a href="#5-3-更改首页文字信息" class="headerlink" title="5.3 更改首页文字信息"></a>5.3 更改首页文字信息</h3><p>进入解压目录\application\index\view\index\，将其中的index.html拷贝后重命名作为备份，然后将index.html放到共享文件夹里（或者使用其他途径传回本地），这是因为Unix的换行符和Windows下的不同，如果直接在Windows下打开，您会发现所有的代码都会挤在一行里，十分难看。</p>
+<p>（注：传回本地后可将换行符更改为<code>CRLF</code>，这样之后直接在Windows里打开编辑也可以。）</p>
+<p>在本地用文本编辑器打开，找到<code>&lt;div class=&quot;fadeInDown&quot; data-wow-delay=&quot;0.2s&quot;&gt;</code>里面的<code>&lt;h3&gt;</code>标签和<code>&lt;h4&gt;</code>标签就是欢迎页上的大大的文字。修改后放回原文件夹即可。</p>
+<h3 id="5-4-添加页脚注释"><a href="#5-4-添加页脚注释" class="headerlink" title="5.4 添加页脚注释"></a>5.4 添加页脚注释</h3><p>有时候想要给自己的站点加一点注释，或者悬挂备案号等等，都需要加在页脚。在页脚添加文字可就不像更改原有的文字那么简单了，需要重新规划布局。</p>
+<h4 id="5-4-1-实现效果"><a href="#5-4-1-实现效果" class="headerlink" title="5.4.1 实现效果"></a>5.4.1 实现效果</h4><p>如图：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/2f08b20eaaec185503dd6e43dc740632b8bcc4f4.png"></p>
+<h4 id="5-4-2-实现方式"><a href="#5-4-2-实现方式" class="headerlink" title="5.4.2 实现方式"></a>5.4.2 实现方式</h4><p>还是进入解压目录\application\index\view\index\，将其中的index.html再次拷贝后重命名作为备份，打开index.html，将以下CSS代码添加到第一行<code>&#123;include file=&quot;header&quot; /&#125;</code>的下面。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">  <span class="selector-class">.flex-col</span> &#123;</span><br><span class="line">  	<span class="attribute">display</span>:-webkit-flex;</span><br><span class="line">  	<span class="attribute">display</span>:-ms-flexbox;</span><br><span class="line">   	<span class="attribute">display</span>:flex;</span><br><span class="line">   	-webkit-<span class="attribute">justify-content</span>:space-between;</span><br><span class="line">   	-ms-<span class="attribute">flex</span>-pack:center;</span><br><span class="line">  	<span class="attribute">justify-content</span>:space-between;</span><br><span class="line">  	-webkit-<span class="attribute">align-items</span>:center;</span><br><span class="line">  	-ms-<span class="attribute">flex</span>-align:center;</span><br><span class="line">  	<span class="attribute">align-items</span>:center;</span><br><span class="line">  	<span class="attribute">height</span>:<span class="number">100%</span>;</span><br><span class="line">  	<span class="attribute">flex-direction</span>: column;</span><br><span class="line">  	-webkit-<span class="attribute">flex-direction</span>: column;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后在<code>&lt;div class=&quot;full-bg-img flex-col&quot;&gt;</code>和<code>&lt;div class=&quot;container smooth-scroll&quot;&gt;</code>这两行之间，加入<code>&lt;div&gt;&lt;/div&gt;</code>，即：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;hm-gradient&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;full-bg-img flex-col&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<p>然后在<code>&lt;div class=&quot;container smooth-scroll&quot;&gt;</code>所对应的<code>&lt;/div&gt;</code>的下面，插入：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h6</span> <span class="attr">style</span>=<span class="string">&quot;color: white&quot;</span>&gt;</span>这里填写您想展示的文字<span class="tag">&lt;/<span class="name">h6</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>即可。</p>
+<h4 id="5-4-3-原理"><a href="#5-4-3-原理" class="headerlink" title="5.4.3 原理"></a>5.4.3 原理</h4><p>使用了flex布局。</p>
+<blockquote>
+<p>2009年，W3C 提出了网页布局的一种新方案——Flex 布局，可以简便、完整、响应式地实现各种页面布局。目前，它已经得到了所有浏览器的支持，这意味着，现在就能很安全地使用这项功能。</p>
+</blockquote>
+<p>*<strong>请加入<code>-webkit-</code>前缀以便在webkit内核的浏览器上正确显示。</strong></p>
+<p><code>flex-direction</code>定义主轴的方向，这里设为<code>coloum</code>，即竖向排列。</p>
+<p><code>justify-content</code>定义项目在主轴上的对齐方式，这里设为<code>space-between</code>，即两端对齐主轴边缘，剩余项目均匀排列。</p>
+<p><code>align-items</code>定义项目在交叉轴上的对齐方式，这里设为<code>center</code>，即居中显示。</p>
+<h2 id="6-Cloudreve的一些Bug"><a href="#6-Cloudreve的一些Bug" class="headerlink" title="6. Cloudreve的一些Bug"></a>6. Cloudreve的一些Bug</h2><p><strong>对外文字符（除英文，下同）的支持很不友好！</strong></p>
+<p>但是很奇妙的是您可以上传文件名带外文字符的文件，但是上传之后无法重命名，无法移动，无法删除。</p>
+<p>（可以在后台管理面板里删除）</p>
+<p>您也可以创建带外文字符的文件夹，但是无法将一个已有的文件夹更名为带外文字符的字符串。</p>
+<p><strong>目前我还没有找到这个问题的解决办法，如果您解决了此问题，请在文章下面留言，不胜感激！</strong></p>
+<h2 id="7-对此Bug的利用"><a href="#7-对此Bug的利用" class="headerlink" title="7. 对此Bug的利用"></a>7. 对此Bug的利用</h2><p>如果您想创建一个公共账号，里面放一些大家只能下载，不能更改、移动、删除的文件，则可以利用此Bug，将想要共享的文件的文件名后加上一个外文字符（如：ラ），上传至根目录即可。</p>
+<p>（不能上传至二级文件夹，因为文件夹可以被删除！）</p>
+<p>注意将共享用户所在的用户组的的上传策略更改为不能上传文件。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="ほしぞら　りん 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="ほしぞら　りん 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/images/bitcoin.png" alt="ほしぞら　りん 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/cloudreve/" rel="tag"><i class="fa fa-tag"></i> cloudreve</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/icarus-time-change/" rel="prev" title="更改ICARUS主题时间显示方法">
+                  <i class="fa fa-chevron-left"></i> 更改ICARUS主题时间显示方法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/clouddisk/" rel="next" title="星空凛的云盘开始运行啦 - 现已关停">
+                  星空凛的云盘开始运行啦 - 现已关停 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">湘ICP备2021014771号 </a>
+      <img src="/images/beian.png" alt=""><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=43010302001425" rel="noopener" target="_blank">湘公网安备43010302001425号 </a>
+  </div>
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ほしぞら　りん</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

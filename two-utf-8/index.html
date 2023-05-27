@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/rin.png">
+  <link rel="mask-icon" href="/images/rin.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"miaoguoge.xyz","root":"/","images":"/images","scheme":"Gemini","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="事情的起因是每次我从PDF里复制一段话出来粘贴到word中时，总是会出现下面这种格式错乱的情况：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《关于一个汉字为什么会有两个UTF-8编码这件事》">
+<meta property="og:url" content="http://miaoguoge.xyz/two-utf-8/index.html">
+<meta property="og:site_name" content="星空凛的博客">
+<meta property="og:description" content="事情的起因是每次我从PDF里复制一段话出来粘贴到word中时，总是会出现下面这种格式错乱的情况：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/3fd76a650d72736f3cf8ba370122debe2528fa97.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/a80f2835bc649aaf0aea3ade19c11cd5ed3c4cb9.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/0ef207058f6a4cff349a73ed1aa2c2352fdeaa43.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/ea55d34aaf87b680f0fe6b2d7fd118b1bb7132a0.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/d6d2b9959ffb1799d262eff6bf769458c4e01a04.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/2774bcb04557100ad9a05d0bca11853ed1b49e34.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/ac016c1ed7a3fe117951d69752789ff9b554f27d.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/c35216acc8226060823f7c374f9bda0ac49d5c1e.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/76209221f696363664963156c248e952da56f0c7.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/b1d7884ce7c8de1dc16f5d22e8651a330ae1477f.png">
+<meta property="article:published_time" content="2021-12-13T03:11:17.000Z">
+<meta property="article:modified_time" content="2021-12-13T03:52:09.312Z">
+<meta property="article:author" content="ほしぞら　りん">
+<meta property="article:tag" content="复制">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i0.hdslb.com/bfs/album/3fd76a650d72736f3cf8ba370122debe2528fa97.png">
+
+
+<link rel="canonical" href="http://miaoguoge.xyz/two-utf-8/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://miaoguoge.xyz/two-utf-8/","path":"two-utf-8/","title":"《关于一个汉字为什么会有两个UTF-8编码这件事》"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>《关于一个汉字为什么会有两个UTF-8编码这件事》 | 星空凛的博客</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+  <meta name="referrer" content="no-referrer">
+<link rel="alternate" href="/atom.xml" title="星空凛的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">星空凛的博客</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我凛最可爱</p>
+      <img class="custom-logo-image" src="/images/rin2.png" alt="星空凛的博客">
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ほしぞら　りん"
+      src="/images/rin.png">
+  <p class="site-author-name" itemprop="name">ほしぞら　りん</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hoshimgg" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hoshimgg" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hoshimgg@outlook.com" title="E-Mail → mailto:hoshimgg@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/miaoguoge" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;miaoguoge" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/hoshizora.rin.777" title="Facebook → https:&#x2F;&#x2F;www.facebook.com&#x2F;hoshizora.rin.777" rel="noopener" target="_blank"><i class="fab fa-facebook fa-fw"></i>Facebook</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://orangecheers.top/" title="https:&#x2F;&#x2F;orangecheers.top&#x2F;" rel="noopener" target="_blank">果果</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yanlc39.github.io/" title="https:&#x2F;&#x2F;yanlc39.github.io&#x2F;" rel="noopener" target="_blank">北原春希</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lee-tc.github.io/" title="https:&#x2F;&#x2F;lee-tc.github.io&#x2F;" rel="noopener" target="_blank">hbltc</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hoshimgg" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://miaoguoge.xyz/two-utf-8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rin.png">
+      <meta itemprop="name" content="ほしぞら　りん">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="星空凛的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《关于一个汉字为什么会有两个UTF-8编码这件事》
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-12-13 11:11:17" itemprop="dateCreated datePublished" datetime="2021-12-13T11:11:17+08:00">2021-12-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>事情的起因是每次我从PDF里复制一段话出来粘贴到word中时，总是会出现下面这种格式错乱的情况：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/3fd76a650d72736f3cf8ba370122debe2528fa97.png"></p>
+<p><img src="https://i0.hdslb.com/bfs/album/a80f2835bc649aaf0aea3ade19c11cd5ed3c4cb9.png"></p>
+<span id="more"></span>
+
+<p>这显然是由于PDF中的换行符被错误复制出来的问题，我就想拿python写个简单的脚本自动监听剪贴板并替换掉换行符，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> win32clipboard</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clipboard_get</span>():</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;获取剪贴板数据&quot;&quot;&quot;</span></span><br><span class="line">    win32clipboard.OpenClipboard()</span><br><span class="line">    data = win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)</span><br><span class="line">    win32clipboard.CloseClipboard()</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clipboard_set</span>(<span class="params">data</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;设置剪贴板数据&quot;&quot;&quot;</span></span><br><span class="line">    win32clipboard.OpenClipboard()</span><br><span class="line">    win32clipboard.EmptyClipboard()</span><br><span class="line">    win32clipboard.SetClipboardData(win32clipboard.CF_UNICODETEXT, data)</span><br><span class="line">    win32clipboard.CloseClipboard()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">char_replace</span>(<span class="params">txt</span>):</span></span><br><span class="line">    <span class="keyword">if</span> <span class="string">&#x27;\n&#x27;</span> <span class="keyword">in</span> txt:</span><br><span class="line">        new_txt = txt.replace(<span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;&#x27;</span>).replace(<span class="string">&#x27;\r&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;-&#x27;</span> * <span class="number">100</span> + <span class="string">f&#x27;\n【处理后】 <span class="subst">&#123;new_txt&#125;</span>&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span>, new_txt</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">False</span>, txt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    recent_txt = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        txt = clipboard_get()</span><br><span class="line">        <span class="keyword">if</span> txt != recent_txt:</span><br><span class="line">            has_replaced, new_txt = char_replace(txt)</span><br><span class="line">            <span class="keyword">if</span> has_replaced:</span><br><span class="line">                clipboard_set(new_txt)</span><br><span class="line">            recent_txt = txt</span><br><span class="line">        time.sleep(<span class="number">0.4</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<p>我再将那一段话复制到记事本里，发现换行符被很顺利的去掉了。但同时我也发现了一个在word下没发现的问题：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/0ef207058f6a4cff349a73ed1aa2c2352fdeaa43.png"></p>
+<p>有一些字会比其他的字要偏细，也和正常用输入法打出来的同样的字粗细不同，我将其复制到QQ里，发现也是不同的，但是从手机上看起来就很正常：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/ea55d34aaf87b680f0fe6b2d7fd118b1bb7132a0.png"></p>
+<p>我查询了两个“网”字的base64编码，发现他们不一样，这说明它们根本就不是同一个字！</p>
+<p><img src="https://i0.hdslb.com/bfs/album/d6d2b9959ffb1799d262eff6bf769458c4e01a04.png"></p>
+<p>我又想起了现在的汉字多半是UTF-8编码的，我又去查询了一下，果然它们有着不同的编码：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/2774bcb04557100ad9a05d0bca11853ed1b49e34.png"></p>
+<p>但是，一个汉字为什么会有两个不同的UTF-8编码呢？</p>
+<p>我找到了UTF-8编码表：<a target="_blank" rel="noopener" href="https://www.utf8-chartable.de/">Unicode&#x2F;UTF-8-character table (utf8-chartable.de)</a></p>
+<p><img src="https://i0.hdslb.com/bfs/album/ac016c1ed7a3fe117951d69752789ff9b554f27d.png"></p>
+<p>这下终于破案了，那些奇怪的字是康熙字典部首里的部首，编码是<code>2F00 - 2FDF</code>，而我们正常使用的汉字叫做中日韩统一表意文字，编码是<code>4E00 - 9FFF</code>。</p>
+<p>随后我又在GitHub上找到了康熙部首对照字典：<a target="_blank" rel="noopener" href="https://github.com/furuiyang0715/spider_notes/blob/master/codes/kangxi.json">spider_notes&#x2F;kangxi.json at master · furuiyang0715&#x2F;spider_notes (github.com)</a></p>
+<p><img src="https://i0.hdslb.com/bfs/album/c35216acc8226060823f7c374f9bda0ac49d5c1e.png"></p>
+<p>这次再改下程序就OK了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> win32clipboard</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> clipboard.replace_table <span class="keyword">import</span> replace_table</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clipboard_get</span>():</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;获取剪贴板数据&quot;&quot;&quot;</span></span><br><span class="line">    win32clipboard.OpenClipboard()</span><br><span class="line">    data = win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)</span><br><span class="line">    win32clipboard.CloseClipboard()</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clipboard_set</span>(<span class="params">data</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;设置剪贴板数据&quot;&quot;&quot;</span></span><br><span class="line">    win32clipboard.OpenClipboard()</span><br><span class="line">    win32clipboard.EmptyClipboard()</span><br><span class="line">    win32clipboard.SetClipboardData(win32clipboard.CF_UNICODETEXT, data)</span><br><span class="line">    win32clipboard.CloseClipboard()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">char_replace</span>(<span class="params">txt</span>):</span></span><br><span class="line">    has_replaced = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">for</span> old_char, new_char <span class="keyword">in</span> replace_table.items():</span><br><span class="line">        <span class="keyword">if</span> old_char <span class="keyword">in</span> txt:</span><br><span class="line">            txt = txt.replace(old_char, new_char)</span><br><span class="line">            has_replaced = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> has_replaced:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;-&#x27;</span> * <span class="number">100</span> + <span class="string">f&#x27;\n【处理后】 <span class="subst">&#123;txt&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> has_replaced, txt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    recent_txt = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        txt = clipboard_get()</span><br><span class="line">        <span class="keyword">if</span> txt != recent_txt:</span><br><span class="line">            has_replaced, new_txt = char_replace(txt)</span><br><span class="line">            <span class="keyword">if</span> has_replaced:</span><br><span class="line">                clipboard_set(new_txt)</span><br><span class="line">            recent_txt = txt</span><br><span class="line">        time.sleep(<span class="number">0.4</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i0.hdslb.com/bfs/album/76209221f696363664963156c248e952da56f0c7.png"></p>
+<p>复制过来终于正常了：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/b1d7884ce7c8de1dc16f5d22e8651a330ae1477f.png"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="ほしぞら　りん 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="ほしぞら　りん 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/images/bitcoin.png" alt="ほしぞら　りん 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%8D%E5%88%B6/" rel="tag"><i class="fa fa-tag"></i> 复制</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/uniswap-note/" rel="prev" title="Uniswap v3 学习笔记">
+                  <i class="fa fa-chevron-left"></i> Uniswap v3 学习笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/layer2/" rel="next" title="Layer2技术">
+                  Layer2技术 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">湘ICP备2021014771号 </a>
+      <img src="/images/beian.png" alt=""><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=43010302001425" rel="noopener" target="_blank">湘公网安备43010302001425号 </a>
+  </div>
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ほしぞら　りん</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

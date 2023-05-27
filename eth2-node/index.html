@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/rin.png">
+  <link rel="mask-icon" href="/images/rin.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"miaoguoge.xyz","root":"/","images":"/images","scheme":"Gemini","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="1. ETH2.0节点维护记录1.1 测试网概述关于ETH2.0，可阅读Layer2技术 | 星空凛的博客 (miaoguoge.xyz)。 据我理解，ETH2.0有着两大类的测试网：  一类侧重于PoS机制，面向于矿工以及新加入的“验证者”，代表：Prater。它是没有历史包袱的纯ETH2的PoS测试网，类似于1.0时代的这些测试网络：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ETH2.0节点维护记录">
+<meta property="og:url" content="http://miaoguoge.xyz/eth2-node/index.html">
+<meta property="og:site_name" content="星空凛的博客">
+<meta property="og:description" content="1. ETH2.0节点维护记录1.1 测试网概述关于ETH2.0，可阅读Layer2技术 | 星空凛的博客 (miaoguoge.xyz)。 据我理解，ETH2.0有着两大类的测试网：  一类侧重于PoS机制，面向于矿工以及新加入的“验证者”，代表：Prater。它是没有历史包袱的纯ETH2的PoS测试网，类似于1.0时代的这些测试网络：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/9e1b8a661534881b4fe339e38c5ce5bef7a44f3f.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/21053d376b12899af3f6d0394c86b983588871cd.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/1ff7a007fb526792b75e4283823a2ccc9143fa55.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/8aa7244fa4bf6663fd422d6d25f1c0256d9c334d.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/02195e36ffc80ff76f28c76bfbccd0fe23235856.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/130073ef98b9f9bb12b1c47b34f9dc5455fab75a.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/cc1b473747ad5c8af7d5364e1eb25303a40cf72c.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/06c308ee0d503f90dd2adeb717286db622121be4.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/302f242120770eb81fedec91ce6fc8008410fdc3.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/0ededa9733549f7e7b7a44fb466b042d6b7aab25.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/adc87efe44baced5d856d7344d21e3e813037539.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/f6c37ec8797252a608cff9b0356b15fd074a4429.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/6602c94b6f5518cf141f0fb044934f928c7d6d8e.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/b0977f753cdc35b213f7db987e2eea2e04a5be36.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/8b59f54e3bc67d2228b1c9ff1a7a461f4a2849e5.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/518b45f4917eb5a2890e1fbbf15cd8bcbaf68132.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/9d3f1b85d17f825640c2b4c167158566c3d62289.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/7116f56856cae564cfc4fe8458fedb21af1964e7.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/033edb835ede8d25514d5bb395747acb01280ce9.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/69ef178bad85d5c7c6ae469aec563f9650268de1.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/86e590caea566ccd59cf889e2cf0394ad26b42e6.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/00b660f408d0345e189b56f39fb6fa2f2623f846.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/f56a9f5dfe6bf0816bdf83b468407bd8349596c3.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/c19970dbb2d382d48a2925e94c26aaeb781a01cf.png">
+<meta property="article:published_time" content="2022-05-11T08:26:29.000Z">
+<meta property="article:modified_time" content="2022-05-17T05:24:31.927Z">
+<meta property="article:author" content="ほしぞら　りん">
+<meta property="article:tag" content="ETH">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i0.hdslb.com/bfs/album/9e1b8a661534881b4fe339e38c5ce5bef7a44f3f.png">
+
+
+<link rel="canonical" href="http://miaoguoge.xyz/eth2-node/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://miaoguoge.xyz/eth2-node/","path":"eth2-node/","title":"ETH2.0节点维护记录"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ETH2.0节点维护记录 | 星空凛的博客</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+  <meta name="referrer" content="no-referrer">
+<link rel="alternate" href="/atom.xml" title="星空凛的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">星空凛的博客</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我凛最可爱</p>
+      <img class="custom-logo-image" src="/images/rin2.png" alt="星空凛的博客">
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-ETH2-0%E8%8A%82%E7%82%B9%E7%BB%B4%E6%8A%A4%E8%AE%B0%E5%BD%95"><span class="nav-text">1. ETH2.0节点维护记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E6%B5%8B%E8%AF%95%E7%BD%91%E6%A6%82%E8%BF%B0"><span class="nav-text">1.1 测试网概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Geth-Lighthouse%E9%83%A8%E7%BD%B2%E6%8C%87%E5%BC%95"><span class="nav-text">1.2 Geth + Lighthouse部署指引</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%88%9D%E5%A7%8B%E5%8C%96%E5%B7%A5%E4%BD%9C"><span class="nav-text">1. 初始化工作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%9E%84%E5%BB%BA"><span class="nav-text">2. 构建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E9%85%8D%E7%BD%AE"><span class="nav-text">3. 配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-EthDocker%E9%83%A8%E7%BD%B2%E6%8C%87%E5%BC%95"><span class="nav-text">1.3 EthDocker部署指引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-EthDocker-%E9%85%8D%E7%BD%AE%E6%9B%B4%E6%94%B9"><span class="nav-text">1.4 EthDocker 配置更改</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-docker-compose%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-text">1. docker-compose配置文件</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ほしぞら　りん"
+      src="/images/rin.png">
+  <p class="site-author-name" itemprop="name">ほしぞら　りん</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hoshimgg" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hoshimgg" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hoshimgg@outlook.com" title="E-Mail → mailto:hoshimgg@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/miaoguoge" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;miaoguoge" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/hoshizora.rin.777" title="Facebook → https:&#x2F;&#x2F;www.facebook.com&#x2F;hoshizora.rin.777" rel="noopener" target="_blank"><i class="fab fa-facebook fa-fw"></i>Facebook</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://orangecheers.top/" title="https:&#x2F;&#x2F;orangecheers.top&#x2F;" rel="noopener" target="_blank">果果</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yanlc39.github.io/" title="https:&#x2F;&#x2F;yanlc39.github.io&#x2F;" rel="noopener" target="_blank">北原春希</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lee-tc.github.io/" title="https:&#x2F;&#x2F;lee-tc.github.io&#x2F;" rel="noopener" target="_blank">hbltc</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hoshimgg" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://miaoguoge.xyz/eth2-node/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rin.png">
+      <meta itemprop="name" content="ほしぞら　りん">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="星空凛的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ETH2.0节点维护记录
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-05-11 16:26:29" itemprop="dateCreated datePublished" datetime="2022-05-11T16:26:29+08:00">2022-05-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%8C%BA%E5%9D%97%E9%93%BE/" itemprop="url" rel="index"><span itemprop="name">区块链</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="1-ETH2-0节点维护记录"><a href="#1-ETH2-0节点维护记录" class="headerlink" title="1. ETH2.0节点维护记录"></a>1. ETH2.0节点维护记录</h2><h3 id="1-1-测试网概述"><a href="#1-1-测试网概述" class="headerlink" title="1.1 测试网概述"></a>1.1 测试网概述</h3><p>关于ETH2.0，可阅读<a href="https://miaoguoge.xyz/layer2/">Layer2技术 | 星空凛的博客 (miaoguoge.xyz)</a>。</p>
+<p>据我理解，ETH2.0有着两大类的测试网：</p>
+<ul>
+<li>一类侧重于PoS机制，面向于矿工以及新加入的“验证者”，代表：<a target="_blank" rel="noopener" href="https://prater.launchpad.ethereum.org/zh/">Prater</a>。它是没有历史包袱的纯ETH2的PoS测试网，类似于1.0时代的这些测试网络：</li>
+</ul>
+<span id="more"></span>
+
+<p>  <img src="https://i0.hdslb.com/bfs/album/9e1b8a661534881b4fe339e38c5ce5bef7a44f3f.png"></p>
+<p>  同时也被大多数2.0的客户端原生支持：</p>
+<p>  <img src="https://i0.hdslb.com/bfs/album/21053d376b12899af3f6d0394c86b983588871cd.png"></p>
+<ul>
+<li><p>另一类则侧重于the merge，面向于开发者、节点运营商等，代表：<a target="_blank" rel="noopener" href="https://kiln.launchpad.ethereum.org/zh">Kiln</a>。它们模拟的是合并这个过程以及合并完成后的整个网络，也叫做Merge Testnet，这些测试网似乎是由官方来进行维护的，隶属于<a target="_blank" rel="noopener" href="https://twitter.com/search?q=%23TestingTheMerge">#TestingTheMerge</a>这一以太坊社区计划，由<a target="_blank" rel="noopener" href="https://twitter.com/vdWijden">Marius van der Wijden</a>和<a target="_blank" rel="noopener" href="https://twitter.com/parithosh_j">Parithosh Jayanthi</a>领导，并且在进行着不向后兼容的升级：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/1ff7a007fb526792b75e4283823a2ccc9143fa55.png"></p>
+<p>2021年12月20日发布Kintsugi测试网，2022年3月14日发布继任者Kiln测试网，并宣布这有望是最后一个 Merge Testnet，同时将弃用Kintsugi测试网：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/8aa7244fa4bf6663fd422d6d25f1c0256d9c334d.png"></p>
+<p>与以太坊主网一样，Kiln 的执行层在PoW机制下启动，与运行PoS的信标链并行。</p>
+<p>如果想要在kiln测试网上运行节点，则大部分需要Geth配合另一个2.0的客户端共同来完成，并且需要手动make一个特殊的版本：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/02195e36ffc80ff76f28c76bfbccd0fe23235856.png"></p>
+<p>虽说有人搞出来了自动化的Docker镜像，但硬件要求很难负担得起：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/130073ef98b9f9bb12b1c47b34f9dc5455fab75a.png"></p>
+<p>因此我选择的是使用<a target="_blank" rel="noopener" href="https://github.com/remyroy/ethstaker/blob/main/merge-devnet.md">Geth + Lighthouse</a>的方案。</p>
+</li>
+</ul>
+<h3 id="1-2-Geth-Lighthouse部署指引"><a href="#1-2-Geth-Lighthouse部署指引" class="headerlink" title="1.2 Geth + Lighthouse部署指引"></a>1.2 Geth + Lighthouse部署指引</h3><h4 id="1-初始化工作"><a href="#1-初始化工作" class="headerlink" title="1. 初始化工作"></a>1. 初始化工作</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /disk</span><br><span class="line">sudo mkdir ETH2TestnetData</span><br><span class="line">sudo mkdir ETH2LighthouseData</span><br><span class="line">sudo chmod -R 777 ETH2TestnetData ETH2LighthouseData</span><br><span class="line">docker pull ubuntu</span><br><span class="line">docker run -itd -v /disk/ETH2TestnetData:/var/lib/goethereum -v /disk/ETH2LighthouseData:/var/lib/lighthouse -p 30304:30303 --name ETH2Testnet --hostname ETH2Testnet ubuntu</span><br><span class="line">docker <span class="built_in">exec</span> -it ETH2Testnet zsh</span><br><span class="line">apt update</span><br><span class="line">apt install -y zsh</span><br><span class="line">zsh</span><br><span class="line">apt install -y curl git</span><br><span class="line">sh -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)</span>&quot;</span></span><br><span class="line">apt install -y vim</span><br><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">vim .zshrc  <span class="comment"># 修改主题为&quot;ys&quot;</span></span><br><span class="line"><span class="built_in">source</span> .zshrc</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-syntax-highlighting.git <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;</span>/plugins/zsh-syntax-highlighting</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-autosuggestions <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;</span>/plugins/zsh-autosuggestions</span><br><span class="line">apt install -y tmux</span><br><span class="line">vim .zshrc  <span class="comment"># 修改插件为&quot;git tmux extract zsh-syntax-highlighting zsh-autosuggestions&quot;</span></span><br><span class="line"><span class="built_in">source</span> .zshrc</span><br><span class="line">apt install -y locales</span><br><span class="line">locale-gen zh_CN.UTF-8</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export LANG=C.UTF-8&#x27;</span> &gt;&gt; ~/.zshrc</span><br><span class="line"><span class="comment"># Ctrl+P+Q</span></span><br><span class="line">docker commit -m=<span class="string">&quot;ubuntu_mgg&quot;</span> -a=<span class="string">&quot;hoshimgg&quot;</span> ETH2Testnet ubuntu/mgg:1.0</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-构建"><a href="#2-构建" class="headerlink" title="2. 构建"></a>2. 构建</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it ETH2Testnet zsh</span><br><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">apt install -y build-essential pkg-config cmake clang wget ccze  <span class="comment"># 70 Shanghai</span></span><br><span class="line">wget https://go.dev/dl/go1.17.8.linux-amd64.tar.gz</span><br><span class="line">rm -rf /usr/<span class="built_in">local</span>/go &amp;&amp; tar -C /usr/<span class="built_in">local</span> -xzf go1.17.8.linux-amd64.tar.gz</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/<span class="built_in">local</span>/go/bin</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=&quot;$PATH:/usr/local/go/bin&quot;&#x27;</span> &gt;&gt; ~/.zshrc</span><br><span class="line">rm go1.17.8.linux-amd64.tar.gz</span><br><span class="line">curl https://sh.rustup.rs -sSf | sh  <span class="comment"># 1</span></span><br><span class="line"><span class="built_in">source</span> <span class="variable">$HOME</span>/.cargo/env</span><br><span class="line">git <span class="built_in">clone</span> -b merge-kiln-v2 https://github.com/MariusVanDerWijden/go-ethereum.git</span><br><span class="line"><span class="built_in">cd</span> go-ethereum</span><br><span class="line">make geth</span><br><span class="line">cp ./build/bin/geth /usr/<span class="built_in">local</span>/bin</span><br><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">git <span class="built_in">clone</span> -b unstable https://github.com/sigp/lighthouse.git</span><br><span class="line"><span class="built_in">cd</span> lighthouse</span><br><span class="line">make</span><br><span class="line">cp ~/.cargo/bin/lighthouse /usr/<span class="built_in">local</span>/bin</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-配置"><a href="#3-配置" class="headerlink" title="3. 配置"></a>3. 配置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/eth-clients/merge-testnets.git</span><br><span class="line">useradd --no-create-home --shell /bin/<span class="literal">false</span> goeth</span><br><span class="line">mkdir -p /var/lib/goethereum</span><br><span class="line">cp ~/merge-testnets/kiln/genesis.json /var/lib/goethereum/</span><br><span class="line">chown -R goeth:goeth /var/lib/goethereum</span><br><span class="line">apt install sudo</span><br><span class="line">sudo -u goeth /usr/<span class="built_in">local</span>/bin/geth init /var/lib/goethereum/genesis.json --datadir /var/lib/goethereum</span><br></pre></td></tr></table></figure>
+
+<p>编辑<code>~/scripts/start_geth.sh</code>文件，内容如下：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/bin/geth \</span><br><span class="line">    <span class="attr">--syncmode</span>=full \</span><br><span class="line">    --http \</span><br><span class="line">    --datadir /var/lib/goethereum \</span><br><span class="line">    --metrics \</span><br><span class="line">    --metrics.expensive \</span><br><span class="line">    --pprof \</span><br><span class="line">    <span class="attr">--networkid</span>=<span class="number">1337802</span> \</span><br><span class="line">    <span class="attr">--http.api</span>=<span class="string">&quot;engine,eth,web3,net,debug&quot;</span> \</span><br><span class="line">    --http.corsdomain &quot;*&quot; \</span><br><span class="line">    --http.addr &quot;0.0.0.0&quot; \</span><br><span class="line">    <span class="attr">--authrpc.jwtsecret</span>=/var/lib/goethereum/jwtsecret \</span><br><span class="line">    --override.terminaltotaldifficulty 20000000000000 \</span><br><span class="line">    --bootnodes &quot;enode://c354db99124f0faf677ff0e75c3cbbd568b2febc186af664e0c51ac435609badedc67a18a63adb64dacc1780a28dcefebfc29b83fd1a3f4aa3c0eb161364cf94@164.92.130.5:30303&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Ctrl+P+Q</span></span><br><span class="line">docker commit -m=<span class="string">&quot;eth2node/testnet&quot;</span> -a=<span class="string">&quot;hoshimgg&quot;</span> ETH2Testnet eth2node/testnet:1.4</span><br><span class="line">docker <span class="built_in">exec</span> -it ETH2Testnet zsh</span><br><span class="line"><span class="built_in">cd</span> ~/scripts</span><br><span class="line">ts geth</span><br><span class="line">zsh start_geth.sh</span><br><span class="line"><span class="comment"># Ctrl+B D</span></span><br><span class="line">useradd --no-create-home --shell /bin/<span class="literal">false</span> lighthousebeacon</span><br><span class="line">mkdir -p /var/lib/lighthouse</span><br><span class="line">chown -R lighthousebeacon:lighthousebeacon /var/lib/lighthouse</span><br></pre></td></tr></table></figure>
+
+<p>编辑<code>~/scripts/start_lighthouse.sh</code>文件，内容如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sudo -u lighthousebeacon /usr/local/bin/lighthouse bn \</span><br><span class="line">    --network kiln \</span><br><span class="line">    --datadir /var/lib/lighthouse \</span><br><span class="line">    --staking \</span><br><span class="line">    --http-allow-sync-stalled \</span><br><span class="line">    --merge \</span><br><span class="line">    --execution-endpoints http://127.0.0.1:8551 \</span><br><span class="line">    --metrics \</span><br><span class="line">    --validator-monitor-auto \</span><br><span class="line">    --jwt-secrets=&quot;/var/lib/goethereum/jwtsecret&quot; \</span><br><span class="line">    --terminal-total-difficulty-override=20000000000000 \</span><br><span class="line">    --boot-nodes=&quot;enr:-Iq4QMCTfIMXnow27baRUb35Q8iiFHSIDBJh6hQM5Axohhf4b6Kr_cOCu0htQ5WvVqKvFgY28893DHAg8gnBAXsAVqmGAX53x8JggmlkgnY0gmlwhLKAlv6Jc2VjcDI1NmsxoQK6S-Cii_KmfFdUJL2TANL3ksaKUnNXvTCv1tLwXs0QgIN1ZHCCIyk&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">chmod +r /var/lib/goethereum/jwtsecret</span><br><span class="line">ts lighthouse</span><br><span class="line">zsh start_lighthouse.sh</span><br><span class="line"><span class="comment"># Ctrl+B D</span></span><br></pre></td></tr></table></figure>
+
+<p>理论上来说，这样就部署完成了，但是我在运行时碰到了问题，而且并没有搜寻到解决方案，只好在GitHub上提了一个issue：<a target="_blank" rel="noopener" href="https://github.com/remyroy/ethstaker/issues/13">Errors when deploying in Docker · Issue #13 · remyroy&#x2F;ethstaker (github.com)</a>，目前还没有人回复，因此，我觉定先用上文提到的自动化的Docker镜像作为替代方案尝试一下。</p>
+<hr>
+<blockquote>
+<p>2022年5月11日更新</p>
+</blockquote>
+<p>经过数天的验证，HDD似乎还承受的住，因此该方案（Geth + Lighthouse）放弃。</p>
+<hr>
+<h3 id="1-3-EthDocker部署指引"><a href="#1-3-EthDocker部署指引" class="headerlink" title="1.3 EthDocker部署指引"></a>1.3 EthDocker部署指引</h3><p><a target="_blank" rel="noopener" href="https://eth-docker.net/docs/Usage/BeforeYouStart">Before you start. | eth-docker</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/eth-educators/eth-docker/blob/merge/KILN.md">eth-docker&#x2F;KILN.md at merge · eth-educators&#x2F;eth-docker (github.com)</a></p>
+<p>文档中提到“共识客户端数据库很小，大约20-100GB，但不知道一旦与PoW合并完成，增长会是什么样子。”</p>
+<p>首先在 <a target="_blank" rel="noopener" href="https://kiln.themerge.dev/">https://kiln.themerge.dev</a> 上为自己的kiln钱包地址申请资金，如果申请成功，则会获得32.08个ETH：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/cc1b473747ad5c8af7d5364e1eb25303a40cf72c.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo usermod -aG docker ubuntu</span><br><span class="line">newgrp docker</span><br><span class="line"><span class="built_in">cd</span> ~/mgg</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/eth-educators/eth-docker.git merge-test &amp;&amp; <span class="built_in">cd</span> merge-test &amp;&amp; git fetch origin merge &amp;&amp; git checkout merge</span><br><span class="line">./ethd config</span><br></pre></td></tr></table></figure>
+
+<p>然后便会出现下图：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/06c308ee0d503f90dd2adeb717286db622121be4.png"></p>
+<p>通过<code>Tab</code>键选择<code>&lt;Ok&gt;</code>，然后回车；</p>
+<p><img src="https://i0.hdslb.com/bfs/album/302f242120770eb81fedec91ce6fc8008410fdc3.png"></p>
+<p>这里选择完整验证者节点；</p>
+<p><img src="https://i0.hdslb.com/bfs/album/0ededa9733549f7e7b7a44fb466b042d6b7aab25.png"></p>
+<p>这里我选择的是默认的Teku；</p>
+<p><img src="https://i0.hdslb.com/bfs/album/adc87efe44baced5d856d7344d21e3e813037539.png"></p>
+<p>这里输入自己的用户名；</p>
+<p><img src="https://i0.hdslb.com/bfs/album/f6c37ec8797252a608cff9b0356b15fd074a4429.png"></p>
+<p>这里选择Geth；</p>
+<p><img src="https://i0.hdslb.com/bfs/album/6602c94b6f5518cf141f0fb044934f928c7d6d8e.png"></p>
+<p>这里选择Yes，使用控制台面板；</p>
+<p><img src="https://i0.hdslb.com/bfs/album/b0977f753cdc35b213f7db987e2eea2e04a5be36.png"></p>
+<p>这里输入自己的地址；然后整个配置过程便完成了：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/8b59f54e3bc67d2228b1c9ff1a7a461f4a2849e5.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /disk</span><br><span class="line">sudo mkdir ETH2DockerData</span><br><span class="line">sudo chmod -R 777 ETH2DockerData</span><br><span class="line"><span class="built_in">cd</span> ~/mgg/merge-test</span><br></pre></td></tr></table></figure>
+
+<p>此时修改一下<code>geth.yml</code>，将<code>execution</code>下的<code>volumes</code>中的<code>gethexecution-data</code>改为<code>/disk/ETH2DockerData</code>：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/518b45f4917eb5a2890e1fbbf15cd8bcbaf68132.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ts long_time_work</span><br><span class="line">docker-compose build</span><br><span class="line"><span class="comment"># 耐心等待</span></span><br><span class="line">docker-compose run --rm deposit-cli-new --eth1_withdrawal_address 0x0F42798dEf01713f2e710669e2182B2d3D4110E3</span><br><span class="line"><span class="comment"># 验证者数量填1</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i0.hdslb.com/bfs/album/9d3f1b85d17f825640c2b4c167158566c3d62289.png"></p>
+<p>去<a target="_blank" rel="noopener" href="https://kiln.launchpad.ethereum.org/zh/overview">以太坊官网</a>成为验证者：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/7116f56856cae564cfc4fe8458fedb21af1964e7.png"></p>
+<p><img src="https://i0.hdslb.com/bfs/album/033edb835ede8d25514d5bb395747acb01280ce9.png"></p>
+<p><img src="https://i0.hdslb.com/bfs/album/69ef178bad85d5c7c6ae469aec563f9650268de1.png"></p>
+<p><img src="https://i0.hdslb.com/bfs/album/86e590caea566ccd59cf889e2cf0394ad26b42e6.png"></p>
+<p><img src="https://i0.hdslb.com/bfs/album/00b660f408d0345e189b56f39fb6fa2f2623f846.png"></p>
+<p><img src="https://i0.hdslb.com/bfs/album/f56a9f5dfe6bf0816bdf83b468407bd8349596c3.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./ethd keyimport</span><br><span class="line">./ethd up</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-EthDocker-配置更改"><a href="#1-4-EthDocker-配置更改" class="headerlink" title="1.4 EthDocker 配置更改"></a>1.4 EthDocker 配置更改</h3><h4 id="1-docker-compose配置文件"><a href="#1-docker-compose配置文件" class="headerlink" title="1. docker-compose配置文件"></a>1. docker-compose配置文件</h4><p>如果修改了dc的配置文件，比如修改了<code>geth.yml</code>：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/c19970dbb2d382d48a2925e94c26aaeb781a01cf.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/mgg/merge-test</span><br><span class="line">./ethd stop</span><br><span class="line">dc -f geth.yml build</span><br><span class="line">./ethd up</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="ほしぞら　りん 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="ほしぞら　りん 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/images/bitcoin.png" alt="ほしぞら　りん 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ETH/" rel="tag"><i class="fa fa-tag"></i> ETH</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/packet-capture-tools/" rel="prev" title="抓包小脚本汇总">
+                  <i class="fa fa-chevron-left"></i> 抓包小脚本汇总
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/eth2-knowledge-base/" rel="next" title="以太坊 2.0 知识库">
+                  以太坊 2.0 知识库 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">湘ICP备2021014771号 </a>
+      <img src="/images/beian.png" alt=""><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=43010302001425" rel="noopener" target="_blank">湘公网安备43010302001425号 </a>
+  </div>
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ほしぞら　りん</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/rin.png">
+  <link rel="mask-icon" href="/images/rin.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"miaoguoge.xyz","root":"/","images":"/images","scheme":"Gemini","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="版权声明：本文为CSDN博主「Tangenter」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。 原文链接：https:&#x2F;&#x2F;blog.csdn.net&#x2F;Tangenter&#x2F;article&#x2F;details&#x2F;104700314  经过四十五天的查找，访谈和编写，本人在此荣幸地向各位宣布：由我所著的《整型溢出：信息学竞赛的发展，繁荣与衰退》一书已正式完成，可以阅">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【转载】《整型溢出：信息学竞赛的发展，繁荣与衰退》">
+<meta property="og:url" content="http://miaoguoge.xyz/integer-overflow/index.html">
+<meta property="og:site_name" content="星空凛的博客">
+<meta property="og:description" content="版权声明：本文为CSDN博主「Tangenter」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。 原文链接：https:&#x2F;&#x2F;blog.csdn.net&#x2F;Tangenter&#x2F;article&#x2F;details&#x2F;104700314  经过四十五天的查找，访谈和编写，本人在此荣幸地向各位宣布：由我所著的《整型溢出：信息学竞赛的发展，繁荣与衰退》一书已正式完成，可以阅">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/e34381764e6967c2c0e5ece5eedee7287b34ee82.jpg">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/6729b54ba331d84ddb1a37af5c3c33a72c1a689b.jpg">
+<meta property="article:published_time" content="2020-03-18T14:22:42.000Z">
+<meta property="article:modified_time" content="2021-10-20T15:11:08.908Z">
+<meta property="article:author" content="ほしぞら　りん">
+<meta property="article:tag" content="书籍">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i0.hdslb.com/bfs/album/e34381764e6967c2c0e5ece5eedee7287b34ee82.jpg">
+
+
+<link rel="canonical" href="http://miaoguoge.xyz/integer-overflow/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://miaoguoge.xyz/integer-overflow/","path":"integer-overflow/","title":"【转载】《整型溢出：信息学竞赛的发展，繁荣与衰退》"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>【转载】《整型溢出：信息学竞赛的发展，繁荣与衰退》 | 星空凛的博客</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+  <meta name="referrer" content="no-referrer">
+<link rel="alternate" href="/atom.xml" title="星空凛的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">星空凛的博客</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我凛最可爱</p>
+      <img class="custom-logo-image" src="/images/rin2.png" alt="星空凛的博客">
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E4%B8%BA%E4%BD%95%E8%A6%81%E9%98%85%E8%AF%BB%E5%AE%83%EF%BC%9F"><span class="nav-text">我为何要阅读它？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B2%BE%E5%BD%A9%E4%B9%A6%E6%91%98"><span class="nav-text">精彩书摘</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ほしぞら　りん"
+      src="/images/rin.png">
+  <p class="site-author-name" itemprop="name">ほしぞら　りん</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hoshimgg" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hoshimgg" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hoshimgg@outlook.com" title="E-Mail → mailto:hoshimgg@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/miaoguoge" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;miaoguoge" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/hoshizora.rin.777" title="Facebook → https:&#x2F;&#x2F;www.facebook.com&#x2F;hoshizora.rin.777" rel="noopener" target="_blank"><i class="fab fa-facebook fa-fw"></i>Facebook</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://orangecheers.top/" title="https:&#x2F;&#x2F;orangecheers.top&#x2F;" rel="noopener" target="_blank">果果</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yanlc39.github.io/" title="https:&#x2F;&#x2F;yanlc39.github.io&#x2F;" rel="noopener" target="_blank">北原春希</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lee-tc.github.io/" title="https:&#x2F;&#x2F;lee-tc.github.io&#x2F;" rel="noopener" target="_blank">hbltc</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hoshimgg" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://miaoguoge.xyz/integer-overflow/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rin.png">
+      <meta itemprop="name" content="ほしぞら　りん">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="星空凛的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【转载】《整型溢出：信息学竞赛的发展，繁荣与衰退》
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-18 22:22:42" itemprop="dateCreated datePublished" datetime="2020-03-18T22:22:42+08:00">2020-03-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>版权声明：本文为CSDN博主「Tangenter」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。</p>
+<p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/Tangenter/article/details/104700314">https://blog.csdn.net/Tangenter/article/details/104700314</a></p>
+</blockquote>
+<p>经过四十五天的查找，访谈和编写，本人在此荣幸地向各位宣布：由我所著的《整型溢出：信息学竞赛的发展，繁荣与衰退》一书已正式完成，可以阅读了。</p>
+<img src="https://i0.hdslb.com/bfs/album/e34381764e6967c2c0e5ece5eedee7287b34ee82.jpg" style="zoom: 33%;" />
+
+<span id="more"></span>
+
+<p>如标题所述，本书讲述的是信息学竞赛的相关历史。近几年间，信竞经历了一次坐过山车式的发展历程。在很长一段时间内，它的发展势头蒸蒸日上，一天比一天显得更繁荣。然而，从2018年起，形势急转直下，信息学竞赛乃至整个学科竞赛界都遭到了多方面的反复质疑和打击，不断爆发的内部问题更让选手和教练们无所适从。一切是如何走到这一步的？本书将对此给出答案。</p>
+<h3 id="我为何要阅读它？"><a href="#我为何要阅读它？" class="headerlink" title="我为何要阅读它？"></a>我为何要阅读它？</h3><p>如果你是对信息学竞赛感兴趣，却又对此缺乏了解的学生或家长，本书能够帮你迅速了解信竞的方方面面，从学习资料到考试形式，从信竞文化到升学去向。与此同时，你还能摸清信息学竞赛的发展走势，从而对未来做出更加清晰的判断。</p>
+<p>如果你和作者一样，是这些事件的亲历者之一，本书将向你揭示不少此前被人忽略的细节。你将发现许多从前以为毫无道理的事物其实有迹可循，一些难以理解的举动实际上暗含无可辩驳的理由。你也将以此为引子，回忆起自己的过去。</p>
+<p>如果你是现役选手，本书将让你了解信息学竞赛的许多侧面。在训练和刷题的闲暇之余，你可以将本书作为放松读物。</p>
+<p>如果你是曾经的OIER，本书将让你知晓在自己退役之后OI界都发生了什么变化，这些变化的起因为何，如何逐渐发展，又产生了什么后果。</p>
+<p>如果你是位普通的读者，那本书也可让你领略一个涉及到上万名中学生里的佼佼者的故事。循序渐进的内容安排使得即使是对信竞一无所知的读者都能毫无障碍地读完整部书籍，您的阅读体验将相当愉快。</p>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><p>序幕：未知的新时代 ………………………………………… 006</p>
+<p>第一部分 繁荣</p>
+<p>起跑线前 …………………………………………………… 017</p>
+<p>新赛季 ……………………………………………………… 030</p>
+<p>荣耀与梦想 ………………………………………………… 043</p>
+<p>循此苦旅，以达群星 ……………………………………… 054</p>
+<p>第二部分 衰退</p>
+<p>承诺的价值 ………………………………………………… 069</p>
+<p>我们该相信谁？…………………………………………… 080</p>
+<p>各方面的敌人 ……………………………………………… 093</p>
+<p>陷入恐慌 …………………………………………………… 105</p>
+<p>时间与命运 ………………………………………………… 116</p>
+<p>终章：何以为家？…………………………………………… 130</p>
+<p>后记：不忘记才有历史 ……………………………………… 138</p>
+<p>注释及参考资料 ……………………………………………… 140</p>
+<h3 id="精彩书摘"><a href="#精彩书摘" class="headerlink" title="精彩书摘"></a>精彩书摘</h3><p>（摘自第二章：新赛季）</p>
+<p>…信息学竞赛和其余的学科竞赛最大的不同点之一就在于命题的过程。对OI而言，不存在“命题委员会”一类的常设组织。NOI系列赛事的命题机制是一种类似于外包的形式——出题人一般是已经毕业进入大学的前信息学竞赛选手，甚至是尚未毕业但实力强劲的选手。（出题人显然不可能有机会为自己将要参加的考试命题。）这种模式的优势就在于信息学竞赛的题目所包含的知识点能够时时更新，从不显得落后于时代。上一章提到过的刘汝佳就曾在本科及研究生期间为NOI系列赛事命题十余道，而互相出题测试更是国家集训队的常规训练项目之一。虽然选手的OI水平和制题水平并不一定严格成正比，有时也会出现一些过于偏、难、怪的题目，但这种制度仍然瑕不掩瑜。</p>
+<p>命题工作的第一步是寻找核心知识点，通俗一点来说就是所谓“灵感”。在那之后还要经历撰写题面，编写标准程序，拟定数据范围，得到标准输出，确定运行时间和空间限制等一系列步骤才能真正完成一道题目的命制过程。对出题人而言，决定参与命题工作势必要占用他们的不少空余时间。更为重要的是，为正式比赛命题还要承担相应的责任。曾参与上百次NOI系列赛事以及ACM&#x2F;ICPC系列赛事命题工作的前国家集训队员吉如一对此发表了自己的看法：“……以前选手少的时候，NOIP出什么题都行，反正区分的就是那么点一等奖……现在规模扩大了，选手多了，金牌&#x2F;一等奖含金量低了，以前的一等奖&#x2F;金牌选手想往上挤一挤拼名次了……无数双眼睛盯着出题人，冠军队出线队要难题的区分度，金牌队要中难题的区分度，银牌队盯着你中档题的区分度，铜牌队盯着你简单题的区分度。出题人又不是新世界的卡密（日语Kami的音译，指神灵），对题目的估计难免有偏差。”[4]正如他所说，在各方压力和冲突之下，命制一套完美的，令所有人都满意的题目几乎是不可能的事，因此出题人在很多时候还要面对来自参赛选手的非议。这种非议也在一定程度上为命题工作带来了困难，增加了出题人的顾虑。</p>
+<p>当然，出题工作不是无偿的。一般而言，为NOI系列赛事命题有数百至上千元的报酬。但这些费用更类似于“辛苦费”，即补偿出题人在命题工作上耗费的时间和精力的费用。另一位经常参与命题工作的前国家集训队员陈许旻列举了出题费用相对不高的理由：“……不高体现在三个方面：学业更值钱，至少敝校没人愿意为挣这个钱耽误学业；行业有前景，这些出题人随便去一家996.ICU都比出题性价比高；讲课费用很高，比出题高一个数量级。”[5]事实上，出题人们选择参与命题工作的动机中有很大一部分是为了回报信息学竞赛这个概念本身。诚如前文所言，信息学竞赛是一个崭新的世界，为真心爱好它的学生提供了大展宏图的广阔天地。如果没有保质保量的题目来源，OI的发展就会陷入停滞乃至倒退状态，而这是绝大多数选手所不愿意看到的。虽然批评和建议需要被听取，但出题工作本质上是一种为竞赛发展做贡献的行为，因此出题人们更应该得到的是称赞和鼓励。在之后，我们还将见到不少这种信息学竞赛生对信竞圈的正反馈。</p>
+<blockquote>
+<p>版权声明：本文为CSDN博主「Tangenter」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。</p>
+<p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/Tangenter/article/details/104700314">https://blog.csdn.net/Tangenter/article/details/104700314</a></p>
+</blockquote>
+<p><img src="https://i0.hdslb.com/bfs/album/6729b54ba331d84ddb1a37af5c3c33a72c1a689b.jpg"></p>
+<p>如何获取此书：</p>
+<p>目前作者因某种原因撤回了本书，但根据 [知识共享 (Creative Commons) 署名—非商业性使用—相同方式共享 4.0公共许可协议](<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.zh-Hans?__cf_chl_captcha_tk__=95727752ec86b3780d20211e327e8e8af5735491-1584603404-0-AfU5FmZ8My4-LvIa9rRyUVTZO06ZiEnlFgDOaHJTr001cobHDZCn7mdvz2asdWz80WNc-PCVQknQhfwh82IjZgNQrwMHkKEcjMIjfU_QA2_3ZWY6NasuEL0PBfp9BBarYtnipALq_JRWOsVJZ3hSrfEXOylAEgDlmsK3FzwwAvHmLv5s0jVlsf7QTmhv36zesEaHGUalJN5J-zGXt5hCf-Ow9-JMf1zS22v_3IMa3PjoG66AExlY4msNmh2t6W6B1YSAGpmLKUE8YNDWhAkmw92qSKhY518bzF-rcn4yqQ-vhX2RPXyicZJI80BKZpJ8j6CcbshVw1FfOubD8P1glBul_TBuPHeWZtm1jWMsicZXW-13S2k555bVFVBreydpiCwBas4bsrhte0-kZam0RQsSWpdiFzjskqPbkJr35oH8Ys3gnj7RBclgM-lOcP0HK-2hPj-Y0PTKGVzL46Ry0Tw#s2a">知识共享(Creative Commons) 署名—非商业性使用—相同方式共享 4.0 协议国际版</a>) 第二条 a 款“不可撤销”的规定，此协议仍然有效。</p>
+<p>为了遵守许可人的合理要求，在此不再向公众提供电子书链接，想要阅读的话可以联系我（<a href="mailto:&#104;&#111;&#x73;&#x68;&#x69;&#109;&#x67;&#103;&#x40;&#111;&#x75;&#x74;&#x6c;&#111;&#x6f;&#x6b;&#x2e;&#x63;&#111;&#x6d;">&#104;&#111;&#x73;&#x68;&#x69;&#109;&#x67;&#103;&#x40;&#111;&#x75;&#x74;&#x6c;&#111;&#x6f;&#x6b;&#x2e;&#x63;&#111;&#x6d;</a>）获取。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="ほしぞら　りん 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="ほしぞら　りん 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/images/bitcoin.png" alt="ほしぞら　りん 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E4%B9%A6%E7%B1%8D/" rel="tag"><i class="fa fa-tag"></i> 书籍</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/mac-record-sametime/" rel="prev" title="Mac同时录制系统声音及麦克风的方法">
+                  <i class="fa fa-chevron-left"></i> Mac同时录制系统声音及麦克风的方法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/icarus-time-change/" rel="next" title="更改ICARUS主题时间显示方法">
+                  更改ICARUS主题时间显示方法 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">湘ICP备2021014771号 </a>
+      <img src="/images/beian.png" alt=""><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=43010302001425" rel="noopener" target="_blank">湘公网安备43010302001425号 </a>
+  </div>
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ほしぞら　りん</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

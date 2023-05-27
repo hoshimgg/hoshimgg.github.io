@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/rin.png">
+  <link rel="mask-icon" href="/images/rin.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"miaoguoge.xyz","root":"/","images":"/images","scheme":"Gemini","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="1. ETH2.0概述随着ETH1.0上交易量激增，交易费用不断提升、交易时间也不断加大。而ETH2.0主要解决的是可扩展性、网络拥堵和高gas费用的问题。 不同于ETH1.0的PoW（工作量证明）共识，2.0采用的是PoS（权益证明）共识，前期的网络将继续作为2.0的并行系统存在。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Layer2技术">
+<meta property="og:url" content="http://miaoguoge.xyz/layer2/index.html">
+<meta property="og:site_name" content="星空凛的博客">
+<meta property="og:description" content="1. ETH2.0概述随着ETH1.0上交易量激增，交易费用不断提升、交易时间也不断加大。而ETH2.0主要解决的是可扩展性、网络拥堵和高gas费用的问题。 不同于ETH1.0的PoW（工作量证明）共识，2.0采用的是PoS（权益证明）共识，前期的网络将继续作为2.0的并行系统存在。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-12T05:40:12.000Z">
+<meta property="article:modified_time" content="2022-03-05T12:57:31.051Z">
+<meta property="article:author" content="ほしぞら　りん">
+<meta property="article:tag" content="ETH">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://miaoguoge.xyz/layer2/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://miaoguoge.xyz/layer2/","path":"layer2/","title":"Layer2技术"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Layer2技术 | 星空凛的博客</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+  <meta name="referrer" content="no-referrer">
+<link rel="alternate" href="/atom.xml" title="星空凛的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">星空凛的博客</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我凛最可爱</p>
+      <img class="custom-logo-image" src="/images/rin2.png" alt="星空凛的博客">
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-ETH2-0%E6%A6%82%E8%BF%B0"><span class="nav-text">1. ETH2.0概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Layer2%E6%8A%80%E6%9C%AF"><span class="nav-text">2. Layer2技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Optimistic-Rollup"><span class="nav-text">3. Optimistic Rollup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-ZK-Rollup"><span class="nav-text">4. ZK Rollup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%88%86%E7%89%87"><span class="nav-text">5. 分片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-beacon-chain"><span class="nav-text">6. 信标链</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E6%97%B6%E9%9A%99-slots-%E5%92%8C%E6%97%B6%E6%AE%B5-epochs"><span class="nav-text">6.1 时隙 (slots) 和时段 (epochs)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E9%AA%8C%E8%AF%81%E8%80%85-%EF%BC%88validators%EF%BC%89%E5%92%8C%E8%AF%81%E6%98%8E-%EF%BC%88attestations%EF%BC%89"><span class="nav-text">6.2 验证者 （validators）和证明 （attestations）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E4%BA%A4%E8%81%94%EF%BC%88crosslinks%EF%BC%89"><span class="nav-text">6.3 交联（crosslinks）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E5%A7%94%E5%91%98%E4%BC%9A%EF%BC%88committees%EF%BC%89"><span class="nav-text">6.4 委员会（committees）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E6%A3%80%E6%9F%A5%E7%82%B9%EF%BC%88Beacon-Chain-Checkpoints%EF%BC%89"><span class="nav-text">6.5 检查点（Beacon Chain Checkpoints）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-%E6%9C%80%E7%BB%88%E7%A1%AE%E5%AE%9A%E6%80%A7%EF%BC%88Finality%EF%BC%89"><span class="nav-text">6.6 最终确定性（Finality）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-7-%E8%AF%81%E6%98%8E%EF%BC%88attestations%EF%BC%89"><span class="nav-text">6.7 证明（attestations）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-8-%E7%BD%9A%E6%B2%A1"><span class="nav-text">6.8 罚没</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-9-%E9%AA%8C%E8%AF%81%E8%80%85%E6%BF%80%E6%B4%BB%E5%92%8C%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-text">6.9 验证者激活和生命周期</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ほしぞら　りん"
+      src="/images/rin.png">
+  <p class="site-author-name" itemprop="name">ほしぞら　りん</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hoshimgg" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hoshimgg" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hoshimgg@outlook.com" title="E-Mail → mailto:hoshimgg@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/miaoguoge" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;miaoguoge" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/hoshizora.rin.777" title="Facebook → https:&#x2F;&#x2F;www.facebook.com&#x2F;hoshizora.rin.777" rel="noopener" target="_blank"><i class="fab fa-facebook fa-fw"></i>Facebook</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://orangecheers.top/" title="https:&#x2F;&#x2F;orangecheers.top&#x2F;" rel="noopener" target="_blank">果果</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yanlc39.github.io/" title="https:&#x2F;&#x2F;yanlc39.github.io&#x2F;" rel="noopener" target="_blank">北原春希</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lee-tc.github.io/" title="https:&#x2F;&#x2F;lee-tc.github.io&#x2F;" rel="noopener" target="_blank">hbltc</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hoshimgg" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://miaoguoge.xyz/layer2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rin.png">
+      <meta itemprop="name" content="ほしぞら　りん">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="星空凛的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Layer2技术
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-01-12 13:40:12" itemprop="dateCreated datePublished" datetime="2022-01-12T13:40:12+08:00">2022-01-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%8C%BA%E5%9D%97%E9%93%BE/" itemprop="url" rel="index"><span itemprop="name">区块链</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="1-ETH2-0概述"><a href="#1-ETH2-0概述" class="headerlink" title="1. ETH2.0概述"></a>1. ETH2.0概述</h2><p>随着ETH1.0上交易量激增，交易费用不断提升、交易时间也不断加大。而ETH2.0主要解决的是可扩展性、网络拥堵和高gas费用的问题。</p>
+<p>不同于ETH1.0的PoW（工作量证明）共识，2.0采用的是PoS（权益证明）共识，前期的网络将继续作为2.0的并行系统存在。</p>
+<span id="more"></span>
+
+<p><strong>以太坊2.0分为4层：</strong></p>
+<ol>
+<li>PoW主链层：即1.0的单链，在过渡阶段，会逐渐将该层的ETH转移到信标链中；</li>
+<li><strong>信标链</strong>层：负责管理分片链，并参与分片链之间的互通；</li>
+<li><strong>分片</strong>链层：有64条不同的链，与信标链进行沟通、存储数据、运行合约等，每一条链都相当于一条以太坊1.0；</li>
+<li>虚拟机层：eWASM虚拟机，运行智能合约的执行环境，建立于分片上。</li>
+</ol>
+<p>将同时存在两个并行系统。ETH1将继续作为工作链的证明，而ETH2将在新的权益证明系统下运行。</p>
+<p><strong>以太坊2.0有3个阶段（phase）：</strong></p>
+<ol start="0">
+<li>信标链；</li>
+<li>分片；</li>
+<li>执行；</li>
+</ol>
+<h2 id="2-Layer2技术"><a href="#2-Layer2技术" class="headerlink" title="2. Layer2技术"></a>2. Layer2技术</h2><p>虽说ETH2.0可以解决上述问题，但其短时间内难以过度完毕，因此，Layer2技术对区块链进行扩容，用来缓解上述问题。</p>
+<p>Layer2在保持原Layer1功能简单稳定的前提下，把一些原本在 Layer1 上的计算和操作，放在链下去做，在以太坊区块链外部进行扩容。Layer2可以替 Layer1 承担大部分计算工作，比如将以太坊交易从主链上分离出来，降低一层网络的负担，从而实现扩容。但Layer2 只能做到局部共识。</p>
+<p>Layer2有多种解决方案，如Optimistic Rollup、ZK Rollup等。</p>
+<h2 id="3-Optimistic-Rollup"><a href="#3-Optimistic-Rollup" class="headerlink" title="3. Optimistic Rollup"></a>3. Optimistic Rollup</h2><p>通过计算状态更新来增加网络吞吐量，运行一个名为OVM的EVM兼容虚拟机，它允许执行与以太坊上相同的智能合约，使现有的智能合约更容易维护其可组合性。<a href="http://miaoguoge.xyz/uniswap-note/"><strong>Uniswap</strong></a>正是采用了这一方案。</p>
+<p><strong>优点：</strong></p>
+<ol>
+<li>兼容EVM；</li>
+<li>安全性和去中心化程度更高；</li>
+<li>高度的通用计算。</li>
+</ol>
+<p><strong>缺点：</strong></p>
+<ol>
+<li>隐私代价更高；</li>
+<li><em>欺诈证明机制</em>导致退出期较长（1-7天）。</li>
+</ol>
+<p><strong>欺诈证明机制：</strong></p>
+<p>由于区块可能包含不正确的状态转换，因此欺诈证明机制允许在一个时间范围（争议时间段，DTF，Dispute Time Frame）内对此错误状态提出异议。若在DTF内未提交欺诈证据，则认为该状态转换是正确的；反之，若欺诈证明被提交给了智能合约，并且确实被验证了该状态转换是错误的，则会导致智能合约恢复到上一次的正确状态，随后可能会对违规方进行惩罚。</p>
+<h2 id="4-ZK-Rollup"><a href="#4-ZK-Rollup" class="headerlink" title="4. ZK Rollup"></a>4. ZK Rollup</h2><p>所有资金由主链上的智能合约持有，而计算和存储则在链下进行。每个Rollup区块都会生成一个状态转换<em>零知识证明</em>（SNARK），并通过主链合约进行验证。</p>
+<p><strong>优点：</strong></p>
+<ol>
+<li>绝对的安全性；</li>
+<li>低延迟。</li>
+</ol>
+<p><strong>缺点：</strong></p>
+<ol>
+<li>需要耗费大量计算资源，前期投入较大；</li>
+<li>通用智能合约的支持难度较大。</li>
+</ol>
+<p><strong>零知识证明：</strong></p>
+<p>零知识证明技术可以“模拟”出一个第三方，来保证某一个论断是可信的。</p>
+<p>Vitalik 采用 zkSNARK 技术给现有的以太坊框架带来几十倍的性能提升。在传统的区块链架构中，同样的计算被重复多次，比如签名的校验，交易合法性校验，智能合约的执行等等。这些计算过程都可以被零知识证明技术进行压缩。</p>
+<h2 id="5-分片"><a href="#5-分片" class="headerlink" title="5. 分片"></a>5. 分片</h2><p>总体来说，ETH2采用的分片机制指的就是对数据库进行横向分割。每条分片链都拥有一个节点子集，在该链上进行工作。虚拟矿工和验证者被分配到不同的分片中，并且只处理和验证自己所在分片链上的交易。</p>
+<p>为保证分片安全性，每个分片区块都有一个委员会，其中的验证者被随机分配。如果攻击者控制的验证者少于总数的三分之一，其想要攻击单个分片是难以实现的。</p>
+<h2 id="6-beacon-chain"><a href="#6-beacon-chain" class="headerlink" title="6. 信标链"></a>6. 信标链</h2>
+
+<p>信标链这一名词来源于随机信标（randomness beacon, 向公众提供随机数字）这一概念。信标链在一个伪随机的过程（RANDAO）中执行共识。</p>
+<h3 id="6-1-时隙-slots-和时段-epochs"><a href="#6-1-时隙-slots-和时段-epochs" class="headerlink" title="6.1 时隙 (slots) 和时段 (epochs)"></a>6.1 时隙 (slots) 和时段 (epochs)</h3><p>每个slot为12s，每个epoch由32个slot组成，即6分24秒。创世区块在epoch0中的slot0中产生。当系统在理想情况下运转时，每12秒就有一个信标链区块和64个分片区块产生。因此可以将一个slot看作是区块生成时间。</p>
+<h3 id="6-2-验证者-（validators）和证明-（attestations）"><a href="#6-2-验证者-（validators）和证明-（attestations）" class="headerlink" title="6.2 验证者 （validators）和证明 （attestations）"></a>6.2 验证者 （validators）和证明 （attestations）</h3><p>在以太坊2.0中，<strong>验证者</strong> (validators) 是权益证明 (PoS) 共识机制中的“虚拟矿工”。<strong>区块提议者</strong>（block proposer）是被随机挑选出来生产区块的验证者。大多数时候，验证者则充当<strong>证明人</strong>（attesters）的角色，对信标区块和分片区块进行投票。这些投票会记录在信标链上，用以决定信标链和分片链的<strong>头部</strong> (heads)。随机验证者在每个slot中提议一个区块，如果其他验证者投票赞成该区块，那么提议验证者将会获得奖励。</p>
+<p>一份<strong>证明</strong>（attestation）则是验证者的一记投票，投票通过验证者的余额进行加权。除区块之外，证明也会在系统中进行广播。验证者之间也会互相监督，通过举报其他验证者自相矛盾的投票或提议多个区块的行为，从而获得奖励。</p>
+<p>在以太坊2.0阶段，用户通过质押ETH来激活和管理验证者。质押者每质押32个ETH，一个验证者就会被激活。但每个验证者拥有的余额<strong>最多为32个ETH</strong>。RANDAO根据验证者余额的权重，选择出区块提议者。</p>
+<h3 id="6-3-交联（crosslinks）"><a href="#6-3-交联（crosslinks）" class="headerlink" title="6.3 交联（crosslinks）"></a>6.3 交联（crosslinks）</h3><p>交联是指将一个信标区块和一个分片区块连接起来。在一个交联中，信标链紧跟分片链头，由于一个信标区块中有64个分片，因此至多可以容纳64个交联。所有分片链全程都与信标链紧密相连。</p>
+<h3 id="6-4-委员会（committees）"><a href="#6-4-委员会（committees）" class="headerlink" title="6.4 委员会（committees）"></a>6.4 委员会（committees）</h3><p>委员会由一组验证者组成，他们为信标链服务。每个slot的委员会至少由128位验证者组成，一名验证者在每个epoch中只参与一个委员会。一个委员会将会被随机分配到一个分片上，并将其交联到信标区块中。分片委员会仅进行<strong>生产</strong>分片区块的工作。许多分片区块由分片链验证者生产，且不需要与信标链联系。然而，如果某个分片想要和其他分片通信，则需要借助信标委员会将其与信标区块进行交联。</p>
+<p>所有验证者都要在自己所在的slot中投票选出信标链头，这个过程被称为<strong>LMD GHOST投票</strong>。每个委员会都要在自己所在的slot中尝试交联某个特定的分片。</p>
+<h3 id="6-5-检查点（Beacon-Chain-Checkpoints）"><a href="#6-5-检查点（Beacon-Chain-Checkpoints）" class="headerlink" title="6.5 检查点（Beacon Chain Checkpoints）"></a>6.5 检查点（Beacon Chain Checkpoints）</h3><p><strong>检查点</strong> (checkpoints) 就是位于epoch第一个slot里的区块，如果这个slot内没有产生区块，则最近的前一个区块即为检查点。每个epoch都会有一个检查点区块；一个区块可能同时是多个epoch的检查点。检查点也被称为<strong>时段边界区块</strong>（epoch boundary block，EBB）。</p>
+<p>在发起一次LMD GHOST投票时，验证者也要为最近一个epoch的检查点投票，该检查点叫做<strong>目标检查点</strong>（target)。该投票叫做<strong>Casper FFG投票</strong>，而且还包括对前一个检查点（<strong>来源检查点</strong>，source）的投票。验证者只需为自己所分配到的slot发起LMD GHOST投票，但是每一个epoch上的所有验证者都要为epoch的检查点发起FFG投票。</p>
+<p><strong>绝对多数</strong>（supermajority）是指某个投票获得了所有活跃验证者总余额2&#x2F;3的支持。 </p>
+<h3 id="6-6-最终确定性（Finality）"><a href="#6-6-最终确定性（Finality）" class="headerlink" title="6.6 最终确定性（Finality）"></a>6.6 最终确定性（Finality）</h3><p>当一个epoch结束之后，如果其检查点形成了绝对多数，那么该检查点就被<strong>证明</strong>（justified）了。如果一个检查点已经被证明，且其下一个epoch的检查点也被证明了，那么该检查点就被<strong>最终确定</strong>（finalized）了。一般来说，一个检查点会在两个epoch内得以最终确定。</p>
+<p>通常来说，用户交易发生在一个epoch的中间部分，此时距下一个检查点还有半个epoch的时间，也就是说，一笔交易经过2.5 个epoch便可得以最终确定。在理想情况下，超过2&#x2F;3的证明将会被打包进某个epoch的第22个slot中。因此交易得以最终确定的平均时长为14分钟（0.5epoch+1epoch+22slot）。</p>
+<p>虽然最终确定性仅在epoch边界的时候产生，但证明是逐块累加的。当一个信标区块被最终确定时，与该块所交联的分片区块也能被最终确定。检查点可以在离其最近的epoch中被证明，但是至少隔一个epoch才能被最终确认。</p>
+<h3 id="6-7-证明（attestations）"><a href="#6-7-证明（attestations）" class="headerlink" title="6.7 证明（attestations）"></a>6.7 证明（attestations）</h3><p>一则证明包含一个LMD GHOST投票和一个FFG投票。在单个epoch，一名验证者可能有两份证明被打包上链。如果验证者在其所分配的slot里发送证明，且该证明被打包上链，那么验证者获得的奖励为最大值；随后打包上链所获得的奖励就会不断减少。为了留给验证者准备的时间，他们被提前一个epoch分配到委员会中。一旦epoch开始，提议者只会被分配到各slot中。委员会将每一名证明者的签名聚合成一个签名：当验证者在同一个委员会中，并做出了同样的LMD GHOST和FFG投票时，他们的签名就可以被聚合。</p>
+<p><strong>信标链验证者奖惩机制：</strong></p>
+<ol>
+<li>证明者奖励（attester rewards）</li>
+<li>证明者惩罚（attester penalties）</li>
+<li>质押者特有风险（typical downside risk for stakers）</li>
+<li>罚没和吹哨者奖励（slashings and whistleblower rewards）</li>
+<li>提议者奖励（proposer rewards）</li>
+<li>不作为惩罚（inactivity penalty）</li>
+</ol>
+<p>当验证者所给出的证明被其他大部分验证者所同意时，会获得奖励。在阶段1中，验证者也可以通过与分片产生交联而获取奖励。相反，如果验证者没有提交证明，或者其投票选出的区块最终没有被确定，那么验证者就会受到惩罚。<strong>罚没</strong>（slashing）的数额最少为0.5个ETH，最多则是一名验证者的所有质押金额。受到罚没惩罚后，验证者会被停止继续参与工作。如果1&#x2F;3的验证者同时受到了罚没，他们会损失所有余额（<strong>额外惩罚</strong>）。而对罚没行为举报成功的验证者，则可以获取吹哨者奖励。</p>
+<p>区块一旦得以最终确定，一直在线且妥善完成工作的验证者，他们提议区块所能获得的奖励将提高1&#x2F;8。如果发生罚没行为，提议者还可以将罚没证据打包进区块，从而获得少量报酬。在阶段0中，所有吹哨者的奖励实际上都归于提议者。</p>
+<p>如果有超过4个epoch没有获得最终确定性，那么所有验证者都要受到翻倍的<strong>不作为惩罚</strong>，直到下一个检查点被最终确定。其作用在于：如果50%的验证者掉线了，将在21天后重新对区块进行最终确定。</p>
+<h3 id="6-8-罚没"><a href="#6-8-罚没" class="headerlink" title="6.8 罚没"></a>6.8 罚没</h3><p>如果出现以下这三种情况，要对验证者进行罚没惩罚：</p>
+<ol>
+<li><p><strong>双重提议</strong>（double proposal）</p>
+<p>指一名区块提议者在他所分配到的slot里提议一个以上的区块。</p>
+</li>
+<li><p><strong>双重投票</strong>（double vote）</p>
+<p>指一名验证者针对同一个目标检查点、不同的源检查点发起两次FFG投票。</p>
+</li>
+<li><p><strong>环绕投票</strong>（surround vote）</p>
+<p>指一名验证者发起的FFG投票环绕之前的FFG投票，或是被之前的FFG投票所环绕。</p>
+</li>
+</ol>
+<p>LMD GHOST投票不会受到罚没惩罚。针对同一个源检查点的两次FFG投票不会受到罚没惩罚（这可以增加系统的灵活性）。一名<strong>吹哨者</strong>提出举报时，需要打包冲突投票的相关信息来证明该验证者应受到罚没。</p>
+<h3 id="6-9-验证者激活和生命周期"><a href="#6-9-验证者激活和生命周期" class="headerlink" title="6.9 验证者激活和生命周期"></a>6.9 验证者激活和生命周期</h3><p>一个用户在以太坊主网的存款合约（deposit contract）里质押32个ETH，就会激活一位验证者。当验证者的余额低于16个ETH时，信标链就会停止这些验证者的工作。当验证者工作2048个epoch后，可以自愿选择退出。退出时，质押者需要等待4个epoch才能撤出其质押金。在这4个epoch之内，验证者仍然有可能面临举报和罚没。若其受到了罚没惩罚，则必须等待8192个epoch之后才能够提出余额。</p>
+<p>为避免短时间内激活大量验证者对系统进行攻击，单位epoch上验证者激活和退出的数量存在限制。激活信标链至少需要16384个创世验证者。信标链需要至少262,144个验证者来生产区块，每个区块包含64条交联。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="ほしぞら　りん 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="ほしぞら　りん 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/images/bitcoin.png" alt="ほしぞら　りん 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ETH/" rel="tag"><i class="fa fa-tag"></i> ETH</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/two-utf-8/" rel="prev" title="《关于一个汉字为什么会有两个UTF-8编码这件事》">
+                  <i class="fa fa-chevron-left"></i> 《关于一个汉字为什么会有两个UTF-8编码这件事》
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/proxy-minor-problems/" rel="next" title="代理小问题汇总">
+                  代理小问题汇总 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">湘ICP备2021014771号 </a>
+      <img src="/images/beian.png" alt=""><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=43010302001425" rel="noopener" target="_blank">湘公网安备43010302001425号 </a>
+  </div>
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ほしぞら　りん</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

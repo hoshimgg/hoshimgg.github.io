@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/rin.png">
+  <link rel="mask-icon" href="/images/rin.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"miaoguoge.xyz","root":"/","images":"/images","scheme":"Gemini","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="Qt拖拽、添加删除动画的实现 说明：效果和部分代码参考了必剪 为保护公司知识产权，仅给出头文件伪代码  1. 先看效果">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Qt拖拽、添加删除动画的实现">
+<meta property="og:url" content="http://miaoguoge.xyz/qt-anima/index.html">
+<meta property="og:site_name" content="星空凛的博客">
+<meta property="og:description" content="Qt拖拽、添加删除动画的实现 说明：效果和部分代码参考了必剪 为保护公司知识产权，仅给出头文件伪代码  1. 先看效果">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/1783e50ac26cf4560c7b08a31d3f26fafaede4ff.gif">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/e0f7e65759049917521d02717c2cdbc79c97f605.gif">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/dd4675bf3577bf1f283ca0e0698333000ca4e5b0.png">
+<meta property="article:published_time" content="2022-09-12T08:04:53.000Z">
+<meta property="article:modified_time" content="2022-09-24T04:05:16.580Z">
+<meta property="article:author" content="ほしぞら　りん">
+<meta property="article:tag" content="Qt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i0.hdslb.com/bfs/album/1783e50ac26cf4560c7b08a31d3f26fafaede4ff.gif">
+
+
+<link rel="canonical" href="http://miaoguoge.xyz/qt-anima/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://miaoguoge.xyz/qt-anima/","path":"qt-anima/","title":"Qt拖拽、添加删除动画的实现"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Qt拖拽、添加删除动画的实现 | 星空凛的博客</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+  <meta name="referrer" content="no-referrer">
+<link rel="alternate" href="/atom.xml" title="星空凛的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">星空凛的博客</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我凛最可爱</p>
+      <img class="custom-logo-image" src="/images/rin2.png" alt="星空凛的博客">
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Qt%E6%8B%96%E6%8B%BD%E3%80%81%E6%B7%BB%E5%8A%A0%E5%88%A0%E9%99%A4%E5%8A%A8%E7%94%BB%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">Qt拖拽、添加删除动画的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%85%88%E7%9C%8B%E6%95%88%E6%9E%9C"><span class="nav-text">1. 先看效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%B1%BB%E5%9B%BE"><span class="nav-text">2. 类图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%BA%95%E5%B1%82%E5%8A%A8%E7%94%BB%E7%BB%84%E4%BB%B6-AnimeListWidget"><span class="nav-text">3. 底层动画组件 AnimeListWidget</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%8B%96%E6%8B%BD%E6%8C%89%E9%92%AEDraggableButton"><span class="nav-text">4. 拖拽按钮DraggableButton</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%8F%AF%E6%8B%96%E6%8B%BD%E5%88%97%E8%A1%A8DraggableListWidget"><span class="nav-text">5. 可拖拽列表DraggableListWidget</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%8B%96%E6%8B%BD%E7%AE%A1%E7%90%86%E5%99%A8DragManager"><span class="nav-text">6. 拖拽管理器DragManager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%8D%A0%E4%BD%8D%E7%AC%A6DropPlaceholder"><span class="nav-text">7. 占位符DropPlaceholder</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ほしぞら　りん"
+      src="/images/rin.png">
+  <p class="site-author-name" itemprop="name">ほしぞら　りん</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hoshimgg" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hoshimgg" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hoshimgg@outlook.com" title="E-Mail → mailto:hoshimgg@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/miaoguoge" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;miaoguoge" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/hoshizora.rin.777" title="Facebook → https:&#x2F;&#x2F;www.facebook.com&#x2F;hoshizora.rin.777" rel="noopener" target="_blank"><i class="fab fa-facebook fa-fw"></i>Facebook</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://orangecheers.top/" title="https:&#x2F;&#x2F;orangecheers.top&#x2F;" rel="noopener" target="_blank">果果</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yanlc39.github.io/" title="https:&#x2F;&#x2F;yanlc39.github.io&#x2F;" rel="noopener" target="_blank">北原春希</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lee-tc.github.io/" title="https:&#x2F;&#x2F;lee-tc.github.io&#x2F;" rel="noopener" target="_blank">hbltc</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hoshimgg" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://miaoguoge.xyz/qt-anima/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rin.png">
+      <meta itemprop="name" content="ほしぞら　りん">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="星空凛的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Qt拖拽、添加删除动画的实现
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-09-12 16:04:53" itemprop="dateCreated datePublished" datetime="2022-09-12T16:04:53+08:00">2022-09-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%A1%8C%E9%9D%A2%E7%AB%AF%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">桌面端开发</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="Qt拖拽、添加删除动画的实现"><a href="#Qt拖拽、添加删除动画的实现" class="headerlink" title="Qt拖拽、添加删除动画的实现"></a>Qt拖拽、添加删除动画的实现</h1><blockquote>
+<p>说明：效果和部分代码参考了必剪</p>
+<p>为保护公司知识产权，仅给出头文件伪代码</p>
+</blockquote>
+<h2 id="1-先看效果"><a href="#1-先看效果" class="headerlink" title="1. 先看效果"></a>1. 先看效果</h2><p><img src="https://i0.hdslb.com/bfs/album/1783e50ac26cf4560c7b08a31d3f26fafaede4ff.gif"></p>
+<span id="more"></span>
+
+<p><img src="https://i0.hdslb.com/bfs/album/e0f7e65759049917521d02717c2cdbc79c97f605.gif"></p>
+<h2 id="2-类图"><a href="#2-类图" class="headerlink" title="2. 类图"></a>2. 类图</h2><p><img src="https://i0.hdslb.com/bfs/album/dd4675bf3577bf1f283ca0e0698333000ca4e5b0.png"></p>
+<h2 id="3-底层动画组件-AnimeListWidget"><a href="#3-底层动画组件-AnimeListWidget" class="headerlink" title="3. 底层动画组件 AnimeListWidget"></a>3. 底层动画组件 AnimeListWidget</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AnimeListWidget</span> :</span> <span class="keyword">public</span> QFrame &#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">AnimeListWidget</span><span class="params">(QMargins margins, <span class="keyword">bool</span> delay_resize, QWidget* parent = <span class="literal">nullptr</span>)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setWidgetPosition</span><span class="params">(<span class="keyword">const</span> std::vector&lt;std::pair&lt;QWidget*, QPoint&gt;&gt;&amp; widget_and_position)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 修改输入控件的父控件</span></span><br><span class="line">        <span class="comment">// 复制QWidget[]</span></span><br><span class="line">        <span class="comment">// 计算自身大小</span></span><br><span class="line">        <span class="built_in">startAnimation</span>();</span><br><span class="line">        <span class="comment">// 更新自身控件列表widgets_</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::vector&lt;QWidget*&gt; widgets_;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">startAnimation</span><span class="params">(<span class="keyword">const</span> std::vector&lt;std::pair&lt;QWidget*, QPoint&gt;&gt;&amp; widget_and_position, <span class="keyword">const</span> QSize&amp; new_size)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 创建QParallelAnimationGroup</span></span><br><span class="line">        <span class="comment">// 设置自身大小</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; x : widget_and_position) &#123;</span><br><span class="line">            <span class="comment">// 已在列表中的控件执行移动</span></span><br><span class="line">            <span class="keyword">auto</span> animation = <span class="keyword">new</span> <span class="built_in">QPropertyAnimation</span>(x.first, <span class="string">&quot;pos&quot;</span>, animation_group);</span><br><span class="line">            <span class="comment">// 未在列表中的控件执行淡入</span></span><br><span class="line">            <span class="keyword">auto</span> animation = <span class="keyword">new</span> <span class="built_in">QPropertyAnimation</span>(x.first-&gt;<span class="built_in">graphicsEffect</span>(), <span class="string">&quot;opacity&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        animation_group-&gt;<span class="built_in">start</span>(QAbstractAnimation::DeleteWhenStopped);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-拖拽按钮DraggableButton"><a href="#4-拖拽按钮DraggableButton" class="headerlink" title="4. 拖拽按钮DraggableButton"></a>4. 拖拽按钮DraggableButton</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DraggableButton</span> :</span> <span class="keyword">public</span> QLabel &#123;</span><br><span class="line">	Q_OBJECT</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">DraggableButton</span>(QWidget* parent, QWidget* drag_widget, <span class="keyword">bool</span> need_hand = <span class="literal">true</span>, QString mimedata = <span class="string">&quot;&quot;</span>);</span><br><span class="line">	<span class="function">QPoint <span class="title">getPosOffset</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">setMimeData</span><span class="params">(QString mimedata)</span></span>;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">mouseMoveEvent</span><span class="params">(QMouseEvent* event)</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">        DragManager::<span class="built_in">Instance</span>().<span class="built_in">onMouseMoved</span>(drag_widget, event, <span class="keyword">this</span>, mimedata);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	QWidget* drag_widget = <span class="literal">nullptr</span>;</span><br><span class="line">	QPoint pos_offset;</span><br><span class="line">	<span class="keyword">bool</span> need_hand;</span><br><span class="line">	QString mimedata;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-可拖拽列表DraggableListWidget"><a href="#5-可拖拽列表DraggableListWidget" class="headerlink" title="5. 可拖拽列表DraggableListWidget"></a>5. 可拖拽列表DraggableListWidget</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DraggableListWidget</span> :</span> <span class="keyword">public</span> QScrollArea &#123;</span><br><span class="line">	Q_OBJECT</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">DraggableListWidget</span>(QWidget* parent, QString mimetype, <span class="keyword">int</span> padding = <span class="number">19</span>, QMargins margins = <span class="built_in">QMargins</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>), </span><br><span class="line">		QListView::Flow direction = QListView::TopToBottom);</span><br><span class="line">    </span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">getSize</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">addItem</span><span class="params">(QWidget* item)</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">insertItem</span><span class="params">(<span class="keyword">int</span> index, QWidget* item)</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">removeItem</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br><span class="line">	<span class="function">QWidget* <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">moveItem</span><span class="params">(<span class="keyword">int</span> source, <span class="keyword">int</span> target)</span></span>;</span><br><span class="line">	<span class="function">std::vector&lt;QWidget*&gt;&amp; <span class="title">getItems</span><span class="params">()</span></span>;</span><br><span class="line">   </span><br><span class="line">signals:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">swapItem</span><span class="params">(<span class="keyword">int</span> source, <span class="keyword">int</span> target, <span class="keyword">int</span> parent_index)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">dragEnterEvent</span><span class="params">(QDragEnterEvent * event)</span> <span class="keyword">override</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">dragMoveEvent</span><span class="params">(QDragMoveEvent* event)</span> <span class="keyword">override</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">dropEvent</span><span class="params">(QDropEvent* event)</span> <span class="keyword">override</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">dragLeaveEvent</span><span class="params">(QDragLeaveEvent* event)</span> <span class="keyword">override</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> slots:</span><br><span class="line">	std::vector&lt;std::pair&lt;QWidget*, QPoint&gt;&gt; <span class="built_in">update_</span>() &#123;</span><br><span class="line">        <span class="keyword">if</span> (is_dragging) &#123;  <span class="comment">// 拖动状态下刷新</span></span><br><span class="line">            <span class="comment">// 放置插入的占位控件</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 正常状态刷新</span></span><br><span class="line">        &#125;</span><br><span class="line">        list_widget-&gt;<span class="built_in">setWidgetPosition</span>(widget_and_position);</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">asyncUpdate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        QTimer::<span class="built_in">singleShot</span>(<span class="number">0</span>, <span class="keyword">this</span>, [<span class="keyword">this</span>]() &#123;</span><br><span class="line">            <span class="built_in">update_</span>();</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	std::vector&lt;QWidget*&gt; items;</span><br><span class="line">	AnimeListWidget* list_widget = <span class="literal">nullptr</span>;</span><br><span class="line">	std::unique_ptr&lt;DropPlaceholder&gt; drop_placeholder;</span><br><span class="line">	QString mimetype;</span><br><span class="line">    <span class="comment">// 根据鼠标位置，计算当前的插入位置，插入位置为排除掉拖动控件的位置</span></span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">calculateDropIndex</span><span class="params">(<span class="keyword">const</span> QPoint&amp; position)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 复制控件列表，但排除被隐藏的控件</span></span><br><span class="line">        <span class="comment">// 根据鼠标位置和中心高度/宽度计算插入位置</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-拖拽管理器DragManager"><a href="#6-拖拽管理器DragManager" class="headerlink" title="6. 拖拽管理器DragManager"></a>6. 拖拽管理器DragManager</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DragManager</span> :</span> <span class="keyword">public</span> QObject &#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">static</span> DragManager&amp; <span class="title">Instance</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">QPointer&lt;QWidget&gt; <span class="title">getDraggingWidget</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="comment">// 处理鼠标事件</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onMouseMoved</span><span class="params">(QPointer&lt;QWidget&gt; widget, QMouseEvent* event, DraggableButton* btn, QString mimedata = <span class="string">&quot;&quot;</span>)</span> </span>&#123;</span><br><span class="line">        <span class="function">emit <span class="title">beginDrag</span><span class="params">(widget)</span></span>;</span><br><span class="line">        QDrag::<span class="built_in">exec</span>(Qt::MoveAction);</span><br><span class="line">        <span class="function">emit <span class="title">endDrag</span><span class="params">(widget)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">signals:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">beginDrag</span><span class="params">(QWidget* dragging_widget)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">endDrag</span><span class="params">(QWidget* dragging_widget)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">DragManager</span><span class="params">(QObject* parent = <span class="literal">nullptr</span>)</span> </span>&#123;&#125;</span><br><span class="line">    QPointer&lt;QWidget&gt; dragging_widget;  <span class="comment">// 处于拖动状态的控件</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-占位符DropPlaceholder"><a href="#7-占位符DropPlaceholder" class="headerlink" title="7. 占位符DropPlaceholder"></a>7. 占位符DropPlaceholder</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DropPlaceholder</span> :</span> <span class="keyword">public</span> QFrame &#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">DropPlaceholder</span><span class="params">(QWidget* parent = <span class="literal">nullptr</span>)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">const</span> QString kStyleSheet = <span class="built_in">QStringLiteral</span>(</span><br><span class="line">            <span class="string">&quot;#dropPlaceholder &#123;&quot;</span></span><br><span class="line">            <span class="string">&quot;   border-radius: 8px;&quot;</span></span><br><span class="line">            <span class="string">&quot;&#125;&quot;</span></span><br><span class="line">            <span class="string">&quot;#mainWidget &#123;&quot;</span></span><br><span class="line">            <span class="string">&quot;   border: 2px dashed rgba(112,134,233,0.8);&quot;</span></span><br><span class="line">            <span class="string">&quot;   border-radius: 8px;&quot;</span></span><br><span class="line">            <span class="string">&quot;   background: rgba(112,134,233,0.16);&quot;</span></span><br><span class="line">            <span class="string">&quot;&#125;&quot;</span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">resizeEvent</span><span class="params">(QResizeEvent* event)</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    QFrame* main_widget_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="ほしぞら　りん 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="ほしぞら　りん 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/images/bitcoin.png" alt="ほしぞら　りん 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Qt/" rel="tag"><i class="fa fa-tag"></i> Qt</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/ropsten-merge/" rel="prev" title="Merge与测试网">
+                  <i class="fa fa-chevron-left"></i> Merge与测试网
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">湘ICP备2021014771号 </a>
+      <img src="/images/beian.png" alt=""><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=43010302001425" rel="noopener" target="_blank">湘公网安备43010302001425号 </a>
+  </div>
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ほしぞら　りん</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

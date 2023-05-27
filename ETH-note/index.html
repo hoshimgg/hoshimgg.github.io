@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/rin.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/rin.png">
+  <link rel="mask-icon" href="/images/rin.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"miaoguoge.xyz","root":"/","images":"/images","scheme":"Gemini","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="以太坊学习笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="以太坊学习笔记">
+<meta property="og:url" content="http://miaoguoge.xyz/ETH-note/index.html">
+<meta property="og:site_name" content="星空凛的博客">
+<meta property="og:description" content="以太坊学习笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/07c79613c4b6615fa5c5a185f59ba23860244312.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/947e2e904964c9ef35b76c0359dc70d12a285e20.png">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/album/0bd2a67f84f7729803dc20814774ce9ece68193e.png">
+<meta property="article:published_time" content="2021-10-12T06:27:32.000Z">
+<meta property="article:modified_time" content="2022-10-14T06:54:58.689Z">
+<meta property="article:author" content="ほしぞら　りん">
+<meta property="article:tag" content="ETH">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i0.hdslb.com/bfs/album/07c79613c4b6615fa5c5a185f59ba23860244312.png">
+
+
+<link rel="canonical" href="http://miaoguoge.xyz/ETH-note/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://miaoguoge.xyz/ETH-note/","path":"ETH-note/","title":"以太坊学习笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>以太坊学习笔记 | 星空凛的博客</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+  <meta name="referrer" content="no-referrer">
+<link rel="alternate" href="/atom.xml" title="星空凛的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">星空凛的博客</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我凛最可爱</p>
+      <img class="custom-logo-image" src="/images/rin2.png" alt="星空凛的博客">
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0-%E6%9C%AF%E8%AF%AD"><span class="nav-text">0. 术语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1"><span class="nav-text">1. 以太坊概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BB%A5%E5%A4%AA%E5%9D%8A%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%8E%86%E5%8F%B2"><span class="nav-text">1.1 以太坊基本概念及历史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%9A%84%E7%BB%84%E4%BB%B6"><span class="nav-text">1.2 以太坊的组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E4%BB%A5%E5%A4%AA%E5%9D%8A%E4%B8%8E%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%E6%80%A7"><span class="nav-text">1.3 以太坊与图灵完备性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E5%8E%BB%E4%B8%AD%E5%BF%83%E5%8C%96%E5%BA%94%E7%94%A8"><span class="nav-text">1.4 去中心化应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2"><span class="nav-text">2. 以太坊基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%A6%82%E8%BF%B0"><span class="nav-text">2.1 概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%90%88%E7%BA%A6%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-text">2.2 合约代码示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E7%BC%96%E8%AF%91Solidity%E5%90%88%E7%BA%A6"><span class="nav-text">2.3 编译Solidity合约</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E5%9C%A8%E5%8C%BA%E5%9D%97%E9%93%BE%E4%B8%8A%E5%88%9B%E5%BB%BA%E5%90%88%E7%BA%A6"><span class="nav-text">2.4 在区块链上创建合约</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-client"><span class="nav-text">3. 以太坊客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%BD%91%E7%BB%9C"><span class="nav-text">3.1 以太坊网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%AE%8C%E6%95%B4%E8%8A%82%E7%82%B9"><span class="nav-text">3.2 完整节点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-%E5%AE%8C%E6%95%B4%E8%8A%82%E7%82%B9%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-text">3.2.1 完整节点优缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-2-%E5%85%AC%E5%85%B1%E6%B5%8B%E8%AF%95%E7%BD%91%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-text">3.2.2 公共测试网优缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-3-%E6%9C%AC%E5%9C%B0%E5%AE%9E%E4%BE%8B%EF%BC%88TestRPC%EF%BC%89"><span class="nav-text">3.2.3 本地实例（TestRPC）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E8%BF%90%E8%A1%8C%E4%BB%A5%E5%A4%AA%E5%9D%8A%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-text">3.3 运行以太坊客户端</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ほしぞら　りん"
+      src="/images/rin.png">
+  <p class="site-author-name" itemprop="name">ほしぞら　りん</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hoshimgg" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hoshimgg" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hoshimgg@outlook.com" title="E-Mail → mailto:hoshimgg@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/miaoguoge" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;miaoguoge" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/hoshizora.rin.777" title="Facebook → https:&#x2F;&#x2F;www.facebook.com&#x2F;hoshizora.rin.777" rel="noopener" target="_blank"><i class="fab fa-facebook fa-fw"></i>Facebook</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://orangecheers.top/" title="https:&#x2F;&#x2F;orangecheers.top&#x2F;" rel="noopener" target="_blank">果果</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yanlc39.github.io/" title="https:&#x2F;&#x2F;yanlc39.github.io&#x2F;" rel="noopener" target="_blank">北原春希</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lee-tc.github.io/" title="https:&#x2F;&#x2F;lee-tc.github.io&#x2F;" rel="noopener" target="_blank">hbltc</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hoshimgg" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://miaoguoge.xyz/ETH-note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/rin.png">
+      <meta itemprop="name" content="ほしぞら　りん">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="星空凛的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          以太坊学习笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-10-12 14:27:32" itemprop="dateCreated datePublished" datetime="2021-10-12T14:27:32+08:00">2021-10-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%8C%BA%E5%9D%97%E9%93%BE/" itemprop="url" rel="index"><span itemprop="name">区块链</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>以太坊学习笔记</p>
+<span id="more"></span>
+
+<h2 id="0-术语"><a href="#0-术语" class="headerlink" title="0. 术语"></a>0. 术语</h2><p><strong>外部拥有账户 EOA</strong></p>
+<p>Externally Owned Account，外部拥有账户，由以太坊的真人用户创建的账户。账户的一种，另一种是合约账户。</p>
+<p><strong>地址 Address</strong></p>
+<p>代表一个账户，是 ECDSA 公钥的 Keccak 散列的最右边的160位，表现为16进制的40个字符长度，在前面加上<code>0x</code>字符。</p>
+<p><strong>比特币改进提议 BIP</strong></p>
+<p>Bitcoin Improvement Proposals，由比特币社区成员提交。</p>
+<p><strong>区块 Block</strong></p>
+<p>区块是关于所包含的交易的所需信息（区块头）的集合，以及称为ommer的一组其他区块头。它被矿工添加到以太坊网络中。</p>
+<p><strong>区块链 Blockchain</strong></p>
+<p>由 工作证明系统 验证的一系列区块，每个区块都连接到它的前任，一直到创世区块。这与比特币协议不同，它没有块大小限制。</p>
+<p><strong>共识 Consensus</strong></p>
+<p>网络上的大量大多数节点，在其本地验证的最佳区块链中都有相同的区块的情况。</p>
+<p><strong>共识规则 Consensus rules</strong></p>
+<p>完整节点为了与其他节点保持一致，遵循的区块验证规则。</p>
+<p><strong>合约账户 Contract account</strong></p>
+<p>包含代码的账户，每当它从另一个账户（EOA 或合约）收到交易时将执行。</p>
+<p><strong>合约创建交易 Contract creation transaction</strong></p>
+<p>一个特殊的交易，以“零地址”作为收件人，用于注册合约并将其记录在以太坊区块链中。</p>
+<p><strong>去中心化自治组织 DAO</strong></p>
+<p>Decentralised Autonomous Organization，没有层级管理的公司和其他组织。</p>
+<p>也可能是指2016年4月30日发布的名为<code>The DAO</code>的合约。</p>
+<p><strong>去中心化应用 DApp</strong></p>
+<p>Decentralised Application，Web 应用程序，至少包括智能合约和 web 用户界面，许多 DApp 也包括去中心化存储和&#x2F;或消息协议和平台。</p>
+<p><strong>契约 Deed</strong></p>
+<p>不可替代的标记标准，证明了所有权并且不可互换。但目前还未在任何管辖区都被认可为合法文件。</p>
+<p><strong>难度 Difficulty</strong></p>
+<p>网络范围的设置，控制产生工作量证明需要多少计算。</p>
+<p><strong>数字签名 Digital signature</strong></p>
+<p>用户可以使用私钥生成称为“签名”的短字符串数据，使其他人可以验证该文件由该特定私钥的所有者“签名”，以及该文件在签署后未被更改。</p>
+<p><strong>椭圆曲线数字签名算法 ECDSA</strong></p>
+<p>Elliptic Curve Digital Signature Algorithm，用来确保资金只能由合法所有者使用。</p>
+<p><strong>以太坊改进建议 EIP</strong></p>
+<p>Ethereum Improvement Proposals，描述以太坊平台的建议标准。</p>
+<p><strong>以太坊名称服务 ENS</strong></p>
+<p>Ethereum Name Service。</p>
+<p><strong>以太坊注释请求 ERC</strong></p>
+<p>Ethereum Request for Comments，一些 EIP 被标记为 ERC，表示试图定义以太坊使用的特定标准的建议。</p>
+<p><strong>Ethash</strong></p>
+<p>以太坊1.0的工作量证明算法。</p>
+<p><strong>以太 Ether</strong></p>
+<p>以太坊系统中使用的本地货币，符号是 <code>Ξ</code> 或 <code>Xi</code> 。</p>
+<p><strong>事件 Event</strong></p>
+<p>允许EVM日志工具的使用，后者可以用来在DApp的用户界面中调用JavaScript回调来监听Event。</p>
+<p><strong>以太坊虚拟机 EVM</strong></p>
+<p>Ethereum Virtual Machine，在以太坊中，执行模型指定了系统状态如何发生改变。 这是通过虚拟状态机的正式模型指定的。</p>
+<p><strong>Ganache</strong></p>
+<p>私有以太坊区块链，可以在上面进行测试，执行命令，在控制区块链如何运作时检查状态。</p>
+<p><strong>燃气 Gas</strong></p>
+<p>以太坊用于执行智能合约的虚拟燃料。EVM使用会计机制来衡量天然气的消耗量并限制计算资源的消耗。燃气是执行智能合约的每条指令产生的计算单位。燃气与以太加密货币挂钩。</p>
+<p><strong>燃气限制 Gas limit</strong></p>
+<p>区块有一个名为燃气限制的区域。它定义了整个区块中所有交易允许消耗的最大燃气量。</p>
+<p><strong>创世区块 Genesis block</strong></p>
+<p>区块链中的第一个块，用来初始化特定的网络和加密数字货币。</p>
+<p><strong>硬分叉 Hard fork</strong></p>
+<p>区块链中的一种永久性分歧，通常发生在非升级节点无法验证升级节点创建的遵循新共识规则的区块时。</p>
+<p><strong>分层确定钱包 HD wallet</strong></p>
+<p>使用分层确定密钥生成和传输协议的钱包。</p>
+<p><strong>分层确定钱包种子 HD wallet seed</strong></p>
+<p>HD钱包种子或根种子是一个可能很短的值，用作生成HD钱包的主私钥和主链码的种子。钱包种子可以用助记词表示。</p>
+<p><strong>互换客户端地址协议 ICAP</strong></p>
+<p>Inter exchange Client Address Protocol，以太坊地址编码，与国际银行帐号（IBAN）编码部分兼容。ICAP总是以<code>XE</code>开始。目的是引入一个新的IBAN国家代码。<code>X</code>表示”extended”，<code>E</code>表示以太坊。</p>
+<p><strong>Keccak256</strong></p>
+<p>以太坊使用的加密哈希方法，不同于标准的 NIST-SHA3。</p>
+<p><strong>密钥推导方法 KDF</strong></p>
+<p>Key Derivation Function，也称为密码扩展算法，它被keystore格式使用，以防止对密码加密的暴力破解。</p>
+<p><strong>Keystore 文件</strong></p>
+<p>JSON 编码的文件，包含一个（随机生成的）私钥，被一个密码加密，以提供额外的安全性。</p>
+<p><strong>库 Library</strong></p>
+<p>以太坊中的库，是特殊类型的合约，没有用于支付的方法，没有后备方法，没有数据存储。所以它不能接收或存储以太，或存储数据。库用作之前部署的代码，其他合约可以调用只读计算。</p>
+<p><strong>轻量级客户端 Lightweight client</strong></p>
+<p>是一个以太坊客户端，它不存储区块链的本地副本，也不验证块和事务。它提供了钱包的功能，可以创建和广播交易。</p>
+<p><strong>消息 Message</strong></p>
+<p>内部交易，从未被序列化，只在EVM中发送。</p>
+<p><strong>矿工 Miner</strong></p>
+<p>通过重复哈希计算，为新的区块寻找有效的工作量证明的网络节点。</p>
+<p><strong>网络 Network</strong></p>
+<p>将交易和区块传播到每个以太坊节点的对等网络。</p>
+<p><strong>节点 Node</strong></p>
+<p>参与到对等网络的软件客户端。</p>
+<p><strong>Ommer</strong></p>
+<p>祖父节点的子节点，但它本身并不是父节点。当矿工找到一个有效的区块时，另一个矿工可能已经发布了一个竞争的区块，并添加到区块链顶部。以太坊中的孤儿区块可以被新的区块作为ommers包含，并获得部分奖励。</p>
+<p><strong>权益证明 PoS</strong></p>
+<p>Proof-of-Stake，加密货币区块链协议旨在实现分布式共识的一种方法。权益证明要求用户证明一定数量的加密货币的所有权，以便能够参与交易验证。</p>
+<p><strong>工作量证明 PoW</strong></p>
+<p>Proof-of-Work，一份需要大量计算才能找到的数据（证明）。在以太坊，矿工必须找到符合网络难度目标的 Ethash 算法的数字解决方案。</p>
+<p><strong>收据 Receipt</strong></p>
+<p>以太坊客户端返回的数据，表示特定交易的结果，包括交易的哈希值、区块编号、使用的燃气量，以及在部署智能合约时的合约地址。</p>
+<p><strong>重入攻击 Re-entrancy Attack</strong></p>
+<p>当攻击者合约（Attacker contracts）调用受害者合约（Victim contracts）的方法时，可以重复这种攻击。称为victim.withdraw()，在对该合约函数的原始调用完成之前，再次调用victim.withdraw()方法，持续递归调用它自己。 递归调用可以通过攻击者合约的后备方法实现。 攻击者必须执行的唯一技巧是在用完燃气之前中断递归调用，并避免盗用的以太被还原。</p>
+<p><strong>REVERT指令</strong></p>
+<p>REVERT指令提供了一种停止执行和恢复状态更改的方式，不消耗所有提供的燃气并且能够返回原因。</p>
+<p><strong>奖励 Reward</strong></p>
+<p>ETH的数量，包含在每个新区块中的金额作为网络对找到工作证明解决方案的矿工的奖励。</p>
+<p><strong>递归长度前缀 RLP</strong></p>
+<p>Recursive Length Prefix，一种编码标准，用来编码和序列化任意复杂度和长度的对象&#x2F;数据结构。</p>
+<p><strong>SELFDESTRUCT 操作码</strong></p>
+<p>只要整个网络存在，智能合约就会存在并可执行。如果它们被编程为自毁的或使用委托调用（delegatecall）或调用代码（calicoed）执行该操作，它们将从区块链中消失。 一旦执行自毁操作，存储在合约地址处的剩余Ether将被发送到另一个地址，并将存储和代码从状态中移除。 尽管这是预期的行为，但自毁合约的修剪可能或不会被以太坊客户实施。</p>
+<p><strong>智能合约 Smart Contract</strong></p>
+<p>在以太坊的计算框架上执行的程序。</p>
+<p><strong>交易 Transaction</strong></p>
+<p>由原始帐户签署的提交到以太坊区块链的数据，并以特定地址为目标。交易包含元数据，例如交易的燃气限额。</p>
+<p><strong>钱包 Wallet</strong></p>
+<p>拥有你的所有密钥的软件。作为访问和控制以太坊账户并与智能合约交互的界面。不存储实际的硬币或代币。</p>
+<p><strong>Wei</strong></p>
+<p>以太的最小单位。$10^{18}\ \rm wei &#x3D; 1\ \rm ether$ .</p>
+<p><strong>零地址 Zero address</strong></p>
+<p>特殊的以太坊地址，全部是由 <code>0</code> 组成（即 <code>0x0000000000000000000000000000000000000000</code>)，被指定为创建一个智能合约所发起的交易的目标地址（即 <code>to</code> 参数的值）。</p>
+<h2 id="1"><a href="#1" class="headerlink" title="1. 以太坊概念"></a>1. 以太坊概念</h2>
+
+<h3 id="1-1-以太坊基本概念及历史"><a href="#1-1-以太坊基本概念及历史" class="headerlink" title="1.1 以太坊基本概念及历史"></a>1.1 以太坊基本概念及历史</h3><p>从计算机科学的角度来说，以太坊是一种确定性但实际上无界的状态机，它有两个基本功能，第一个是全局可访问的单例状态，第二个是对状态进行更改的虚拟机。</p>
+<p>从更实际的角度来说，以太坊是一个开源的、全球的去中心化计算架构，执行被称为 智能合约 的程序。它使用区块链来从同步和存储系统状态，并使用称为 <code>ether</code> 的加密货币来计量和约束执行资源成本。</p>
+<p>以太坊与其他开放区块链共享许多通用元素：连接参与者的对等网络，用于状态同步（工作证明）的共识算法，数字货币（以太）和全局账本（区块链）。</p>
+<p>开源、公开的区块链通常包括以下组件：</p>
+<ul>
+<li>一个连接参与者，传播交易和包含已验证交易的区块的点对点网络，基于标准的<code>gossip</code>协议。</li>
+<li>状态机中实现的一系列共识规则。</li>
+<li>消息，以交易的形式表示，代表状态转移。</li>
+<li>根据共识规则处理交易的状态机。</li>
+<li>分布式数据库，区块链，记录所有状态转移的日志。</li>
+<li>共识算法，通过强制参与者竞争并使用共识规则约束他们，来分散区块链的控制权。</li>
+</ul>
+<p>相比于比特币，以太坊中的开发文化的重点是速度和创新，即使会破坏兼容性。因此以太坊开发人员面临的一个重大挑战是将代码部署到不可变账本与仍在快速发展的开发平台之间的内在矛盾。</p>
+<p>以太坊的主要目的不是数字货币支付网络，但数字货币<code>ether</code>对于以太坊的运作来说仍是必要的。</p>
+<p>与具有非常有限的脚本语言的比特币不同，以太坊被设计成一个通用可编程区块链，能够执行任意和无限复杂的代码。以太坊的语言是<strong>图灵完备</strong>的，这意味着它相当于一台通用计算机。</p>
+<p>以太坊的发展计划分四个阶段进行，每个新阶段都会发生重大变化。每个阶段都可能包含不向后子版本，称为“硬分叉”。四个主要的发展阶段为：</p>
+<ul>
+<li>前沿（Frontier）<ul>
+<li>冰河时代（Ice Age）</li>
+</ul>
+</li>
+<li>家园（Homestead）<ul>
+<li>DAO</li>
+<li>蜜桔前哨（Tangerine Whistle）</li>
+<li>假龙（Spurious Dragon）</li>
+</ul>
+</li>
+<li>大都会（Metropolis）<ul>
+<li>拜占庭（Byzantium）</li>
+<li><strong>君士坦丁堡（Constantinople）</strong>（当前阶段）</li>
+</ul>
+</li>
+<li>宁静（Serenity）</li>
+</ul>
+<p>原始区块链（比特币的区块链）追踪比特币单位的状态及其所有权。可以将比特币视为分布式共识状态机，其中交易引起全局的状态转移，从而更改比特币的所有权。状态转移受共识规则的制约，允许所有参与者开采数个区块后在系统的共同共识状态上汇合。</p>
+<p>以太坊也是一个分布式状态机。除了货币所有权的状态，以太坊还可以追踪通用数据存储的状态转换，通常为键值对。以太坊有自己的<code>memory</code>用来存储代码和数据，使用区块链来跟踪这些内存随着时间的变化。可以将代码加载到其状态机中并运行该代码，并将结果状态更改存储在其区块链中。以太坊状态的变化受共识规则的支配，并且状态通过共享账本全球分布。</p>
+<h3 id="1-2-以太坊的组件"><a href="#1-2-以太坊的组件" class="headerlink" title="1.2 以太坊的组件"></a>1.2 以太坊的组件</h3><p><strong>P2P Network</strong></p>
+<p>以太坊在以太坊主网上运行，可以通过TCP端口30303访问，运行称作<code>ÐΞVp2p</code>的协议。</p>
+<p><strong>Consensus rules</strong></p>
+<p>以太坊的共识规则，在参考规范，即黄皮书中定义。</p>
+<p><strong>Transactions</strong></p>
+<p>Ethereum交易，一种网络消息，包括发送者，接收者，值和数据负载等。</p>
+<p><strong>State Machine</strong></p>
+<p>以太坊的状态转移由EVM处理，执行被称为“智能合约”的程序。</p>
+<p><strong>Blockchain</strong></p>
+<p>以太坊的区块链作为<code>database</code>存储在每个节点上（通常使用<code>LevelDB</code>），包含交易和系统状态。</p>
+<p><strong>Consensus Algorithm</strong></p>
+<p>以太坊目前使用名为<code>Ethash</code>的工作量证明算法，将逐步过渡到称为<code>Casper</code>的权益证明系统。</p>
+<h3 id="1-3-以太坊与图灵完备性"><a href="#1-3-以太坊与图灵完备性" class="headerlink" title="1.3 以太坊与图灵完备性"></a>1.3 以太坊与图灵完备性</h3><p>以太坊是一台通用图灵机，可以计算任何图灵机可以计算的算法。</p>
+<p>图灵完备系统可以在“无限循环”中运行。以太坊在没有实际运行时，无法预测智能合约是否会终止，或者运行多久。为了应对这一问题，以太坊引入了称为<strong>燃气（gas）</strong>的计量机制。EVM在执行智能合约时，会仔细考虑每条指令的成本。每条指令都有一个以燃气为单位的预定成本。当交易触发智能合约的执行时，它必须包含一定量的燃气，用以设定运行智能合约可消耗的计算上限。如果计算所消耗的燃气量超过交易中可用的然气量，则EVM将终止该合约的执行。</p>
+<h3 id="1-4-去中心化应用"><a href="#1-4-去中心化应用" class="headerlink" title="1.4 去中心化应用"></a>1.4 去中心化应用</h3><p>web3.js库中包含名为<code>Swarm</code>的P2P存储网络接口和名为<code>Whisper</code>的P2P消息传递服务。通过包含这些组件，可以构建DApp。</p>
+<h2 id="2"><a href="#2" class="headerlink" title="2. 以太坊基础"></a>2. 以太坊基础</h2>
+
+<h3 id="2-1-概述"><a href="#2-1-概述" class="headerlink" title="2.1 概述"></a>2.1 概述</h3><p>加密货币功能是服务于以太坊作为世界计算机的功能。以太旨在用于支付运行的智能合约。</p>
+<p>EVM是一个全球性的单实例计算机。以太坊网络上的每个节点运行EVM的本地副本以验证合约执行，而以太坊区块链记录此世界计算机在处理交易和智能合约时变化的状态。</p>
+<p>外部所有账户是那些拥有私人密钥的账户，它控制对资金或合约的访问。合约账户由以太坊区块链记录，由EVM执行的软件程序的逻辑所拥有和控制。区别在于人们通过EOA做出决定，而软件通过合约做出决定。</p>
+<p>当交易目的地是合约地址时，它会导致该合约在EVM中运行，并将交易作为其输入。除了<code>ether</code>之外，交易还可以包含数据，用于指示合约中要运行的特定方法以及传递给该方法的参数。通过这种方式，合约可以产生调用其他合约的交易，从而建立复杂的执行路径。</p>
+<h3 id="2-2-合约代码示例"><a href="#2-2-合约代码示例" class="headerlink" title="2.2 合约代码示例"></a>2.2 合约代码示例</h3><p>Solidity是智能合约编程的主要高级语言。</p>
+<p>一个简单的合约：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">contract Faucet &#123;</span><br><span class="line">    // Give out ether to anyone who asks</span><br><span class="line">    function withdraw(uint withdraw_amount) public &#123;</span><br><span class="line">        // Limit withdrawal amount。单位为wei</span><br><span class="line">        require(withdraw_amount &lt;= 100000000000000000);</span><br><span class="line">        // Send the amount to the address that requested it</span><br><span class="line">        msg.sender.transfer(withdraw_amount);</span><br><span class="line">    &#125;</span><br><span class="line">    // Accept any incoming amount</span><br><span class="line">    function () public payable &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>uint</code>：无符号整数；</p>
+<p><code>require</code>：如果不满足则停止执行并显示异常；</p>
+<p><code>msg</code>：所有合约可以访问的输入对象之一，代表触发执行此合约的交易；</p>
+<p><code>msg.sender</code>：触发此合约执行的交易的 sender，也即调用此函数的账户。</p>
+<p><code>function () public payable &#123;&#125;</code>：默认函数，如果合约的交易没有命中任何已声明的其他函数，则会触发此函数。</p>
+<h3 id="2-3-编译Solidity合约"><a href="#2-3-编译Solidity合约" class="headerlink" title="2.3 编译Solidity合约"></a>2.3 编译Solidity合约</h3><p>使用一个被称为Remix的在线IDE：<a target="_blank" rel="noopener" href="https://remix.ethereum.org/">https://remix.ethereum.org/</a></p>
+<p><img src="https://i0.hdslb.com/bfs/album/07c79613c4b6615fa5c5a185f59ba23860244312.png"></p>
+<h3 id="2-4-在区块链上创建合约"><a href="#2-4-在区块链上创建合约" class="headerlink" title="2.4 在区块链上创建合约"></a>2.4 在区块链上创建合约</h3><p>使用Ropsten测试网来测试合约。在区块链上注册合约需要向零地址发起一个特殊交易。</p>
+<p>首先安装MetaMask浏览器插件：<a target="_blank" rel="noopener" href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn">MetaMask - Chrome 网上应用店 (google.com)</a>，</p>
+<p><img src="https://i0.hdslb.com/bfs/album/947e2e904964c9ef35b76c0359dc70d12a285e20.png"></p>
+<p>随后导入或者创建钱包：</p>
+<p><img src="https://i0.hdslb.com/bfs/album/0bd2a67f84f7729803dc20814774ce9ece68193e.png"></p>
+<h2 id="3-client"><a href="#3-client" class="headerlink" title="3. 以太坊客户端"></a>3. 以太坊客户端</h2>
+
+<p>以太坊客户端是实现以太坊规范并通过对等网络与其他以太坊客户端进行通信的程序，它可以由不同的编程语言实现。</p>
+<h3 id="3-1-以太坊网络"><a href="#3-1-以太坊网络" class="headerlink" title="3.1 以太坊网络"></a>3.1 以太坊网络</h3><p>存在着各种基于以太坊的网络，这些网络很大程度上符合以太坊“黄皮书”中定义的规范，但它们可能或不能互相操作。较为出名的以太坊网络有：Ethereum、Ethereum Classic、Ella、Expanse、Ubiq、Musicoin等。较为出名的以太坊客户端有：Geth（Go）、parity（Rust）、cpp-ethereum（C++）、pyethereum（Python）、mantis（Scala）、harmony（Java）。</p>
+<h3 id="3-2-完整节点"><a href="#3-2-完整节点" class="headerlink" title="3.2 完整节点"></a>3.2 完整节点</h3><p>每个完整节点都可以帮助其他新节点获取块数据以引导其操作，并为运营商提供对所有交易和合约的权威和独立验证。但是，运行完整的节点会导致硬件资源和带宽的巨大成本。</p>
+<p>轻量级客户端不会存储区块链的本地副本或验证块和交易；但提供钱包的功能，并可以创建和广播交易；同时还提供API功能（如web3js API）。轻量级客户端通常不验证区块头或交易，它们完全信任由第三方运营的完整客户端并通过RPC访问区块链。</p>
+<h4 id="3-2-1-完整节点优缺点"><a href="#3-2-1-完整节点优缺点" class="headerlink" title="3.2.1 完整节点优缺点"></a>3.2.1 完整节点优缺点</h4><p><strong>优点：</strong></p>
+<ul>
+<li>可以权威性验证所有交易</li>
+<li>无需中介即可与公共区块链上的任何合约进行交互</li>
+<li>可以离线查询区块链状态</li>
+<li>无需中介即可将自己的合约部署到公共区块链中</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>需要大量且不断增长的硬件和带宽资源</li>
+<li>需要较长时间完成初始同步</li>
+</ul>
+<h4 id="3-2-2-公共测试网优缺点"><a href="#3-2-2-公共测试网优缺点" class="headerlink" title="3.2.2 公共测试网优缺点"></a>3.2.2 公共测试网优缺点</h4><p><strong>优点：</strong></p>
+<ul>
+<li>测试网需要同步的数据量极少</li>
+<li>交易所需的测试ether可以免费获得</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>测试网gas免费，而主网需要考虑gas费用</li>
+<li>测试网不会像主网那样经历网络拥塞</li>
+</ul>
+<h4 id="3-2-3-本地实例（TestRPC）"><a href="#3-2-3-本地实例（TestRPC）" class="headerlink" title="3.2.3 本地实例（TestRPC）"></a>3.2.3 本地实例（TestRPC）</h4><p>TestRPC节点可以创建一个本地私有区块链实例，无需其他参与者即可与之交互。</p>
+<p>但这也意味着它没有交易的空间、无法测试公链上采矿的不可预测性、必须自己部署依赖与合约以及不能创建公共合约。</p>
+<h3 id="3-3-运行以太坊客户端"><a href="#3-3-运行以太坊客户端" class="headerlink" title="3.3 运行以太坊客户端"></a>3.3 运行以太坊客户端</h3>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="ほしぞら　りん 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="ほしぞら　りん 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/images/bitcoin.png" alt="ほしぞら　りん 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ETH/" rel="tag"><i class="fa fa-tag"></i> ETH</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/devp2p-packet/" rel="prev" title="devp2p节点发现协议v4不完全实现">
+                  <i class="fa fa-chevron-left"></i> devp2p节点发现协议v4不完全实现
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/kexie-docker/" rel="next" title="使用docker创建科协学习用服务器">
+                  使用docker创建科协学习用服务器 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">湘ICP备2021014771号 </a>
+      <img src="/images/beian.png" alt=""><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=43010302001425" rel="noopener" target="_blank">湘公网安备43010302001425号 </a>
+  </div>
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ほしぞら　りん</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

@@ -6,7 +6,7 @@
   <link href="http://miaoguoge.xyz/atom.xml" rel="self"/>
   
   <link href="http://miaoguoge.xyz/"/>
-  <updated>2022-09-24T04:05:16.580Z</updated>
+  <updated>2024-01-14T17:14:26.079Z</updated>
   <id>http://miaoguoge.xyz/</id>
   
   <author>
@@ -15,6 +15,24 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>美化你的PowerShell</title>
+    <link href="http://miaoguoge.xyz/beautify-powershell/"/>
+    <id>http://miaoguoge.xyz/beautify-powershell/</id>
+    <published>2024-01-14T17:09:23.000Z</published>
+    <updated>2024-01-14T17:14:26.079Z</updated>
+    
+    <content type="html"><![CDATA[<p>先上效果图：</p><p><img src="http://i0.hdslb.com/bfs/new_dyn/265c283377a9c321fced50422c678f7d386158857.png"></p><span id="more"></span><p>打开（或创建）<code>C:\Users\【你的用户名】\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1</code>，加入以下内容：</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">prompt</span></span> &#123;</span><br><span class="line">  <span class="built_in">Write-Host</span> <span class="literal">-NoNewline</span> <span class="string">&quot;# &quot;</span> <span class="literal">-ForegroundColor</span> Blue</span><br><span class="line">  <span class="built_in">Write-Host</span> <span class="literal">-NoNewline</span> <span class="string">&quot;<span class="variable">$env:UserName</span>&quot;</span> <span class="literal">-ForegroundColor</span> Cyan</span><br><span class="line">  <span class="built_in">Write-Host</span> <span class="literal">-NoNewline</span> <span class="string">&quot; @ &quot;</span></span><br><span class="line">  <span class="built_in">Write-Host</span> <span class="literal">-NoNewline</span> <span class="string">&quot;<span class="variable">$env:ComputerName</span>&quot;</span> <span class="literal">-ForegroundColor</span> Green</span><br><span class="line">  <span class="built_in">Write-Host</span> <span class="literal">-NoNewline</span> <span class="string">&quot; in &quot;</span></span><br><span class="line">  <span class="variable">$path</span> = <span class="string">&quot;<span class="variable">$pwd</span>&quot;</span> <span class="operator">-replace</span> <span class="string">&quot;C:\\Users\\【你的用户名】&quot;</span>, <span class="string">&quot;~&quot;</span></span><br><span class="line">  <span class="built_in">Write-Host</span> <span class="literal">-NoNewline</span> <span class="string">&quot;<span class="variable">$path</span>&quot;</span> <span class="literal">-ForegroundColor</span> Yellow</span><br><span class="line">  <span class="variable">$now</span> = <span class="built_in">Get-Date</span> <span class="literal">-Format</span> <span class="string">&quot;tt hh:mm:ss&quot;</span></span><br><span class="line">  <span class="built_in">Write-Host</span> <span class="string">&quot; [<span class="variable">$now</span>]&quot;</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;<span class="variable">$</span> &quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><img src="http://i0.hdslb.com/bfs/new_dyn/0757339bbfac1724bb7b06fc5907e2ed386158857.gif"></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;先上效果图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://i0.hdslb.com/bfs/new_dyn/265c283377a9c321fced50422c678f7d386158857.png&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Qt拖拽、添加删除动画的实现</title>
@@ -449,27 +467,6 @@
     
     
     <category term="git" scheme="http://miaoguoge.xyz/tags/git/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>flutter从外部调用setState()</title>
-    <link href="http://miaoguoge.xyz/flutter-out-setstate/"/>
-    <id>http://miaoguoge.xyz/flutter-out-setstate/</id>
-    <published>2021-09-10T07:56:51.000Z</published>
-    <updated>2021-09-27T07:35:32.648Z</updated>
-    
-    <content type="html"><![CDATA[<p>一般来说，flutter中<code>StatefulWidget</code>里的<code>setState()</code>方法只能在State类中调用，这篇文章介绍了如何从外部调用<code>setState()</code>方法。</p><span id="more"></span><p>需要调用<code>setState()</code>的场合多半是因为页面上的某些元素需要更新，比如用户在登陆后”我的“页面中需要显示用户名，但是登陆表单肯定不在”我的“页面中，甚至可能不是由”我的“页面打开的；那么我们就需要在登陆成功后主动通知”我的“页面去更新显示的用户名。</p><p>有人可能会说不是有生命周期函数吗，肯定有更优雅和自动化的实现方式，但有些情况下生命周期函数是不会按照官方文档中的被调用的，这个我们<a href="http://miaoguoge.xyz/flutter-update-page">下篇博客</a>中再详细说明。</p><ol><li><p>首先在<code>State</code>类中写一个函数，完成界面更新的任务，比如：</p><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">updateUsername() &#123;</span><br><span class="line">    SharedPreferences.getInstance().then((prefs) &#123;</span><br><span class="line">      <span class="keyword">final</span> isLogin = (prefs.getBool(<span class="string">&#x27;isLogin&#x27;</span>) ?? <span class="keyword">false</span>);</span><br><span class="line">      setState(() &#123;</span><br><span class="line">        <span class="keyword">if</span> (isLogin) &#123;</span><br><span class="line">          username = prefs.getString(<span class="string">&#x27;username&#x27;</span>)!;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          username = <span class="string">&quot;请登录&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></li><li><p>然后对<code>StatefulWidget</code>类进行改造，原先是这个样子：</p><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ClassName</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> (&#123;Key? key&#125;) : <span class="keyword">super</span>(key: key);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  _State createState() =&gt; _State();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>我们要把它改造成这个样子：</p><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyInfo</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">final</span> _MyInfoState _myInfoState = _MyInfoState();</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  _MyInfoState createState() =&gt; __myInfoState;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">void</span> updateUsername() &#123;</span><br><span class="line">    _myInfoState.updateUsername();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>可以看到，我们删除了无用的super，将原先匿名的<code>_State</code>类改为了私有变量，并且定义了一个<code>static</code>的方法，这个方法的唯一作用就是去调用<code>_State</code>类那个实例中的同名方法。</p></li><li><p>这样之后，从外部就可以调用<code>MyInfo.updateUsername()</code>以完成界面更新了。</p></li></ol>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;一般来说，flutter中&lt;code&gt;StatefulWidget&lt;/code&gt;里的&lt;code&gt;setState()&lt;/code&gt;方法只能在State类中调用，这篇文章介绍了如何从外部调用&lt;code&gt;setState()&lt;/code&gt;方法。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="开发" scheme="http://miaoguoge.xyz/categories/%E5%BC%80%E5%8F%91/"/>
-    
-    
-    <category term="flutter" scheme="http://miaoguoge.xyz/tags/flutter/"/>
     
   </entry>
   

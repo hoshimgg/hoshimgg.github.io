@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f8e8ec">
+  <title>星空凛集团｜录用通知函</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #302733;
+      --muted: #756b78;
+      --wine: #9f4560;
+      --pink: #f3b8c7;
+      --paper: rgba(255, 252, 249, .94);
+      --night: #20213e;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { min-height: 100%; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Songti SC", "STSong", "Noto Serif SC", serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255,255,255,.95) 0 2px, transparent 3px),
+        radial-gradient(circle at 82% 15%, rgba(255,255,255,.8) 0 1.5px, transparent 2.5px),
+        radial-gradient(circle at 22% 85%, rgba(255,255,255,.75) 0 1px, transparent 2px),
+        linear-gradient(155deg, #252848 0%, #5a4564 46%, #e3a7b6 100%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(2px);
+      pointer-events: none;
+    }
+
+    body::before {
+      width: 220px;
+      height: 220px;
+      top: -95px;
+      right: -70px;
+      background: rgba(255, 222, 229, .25);
+    }
+
+    body::after {
+      width: 170px;
+      height: 170px;
+      left: -85px;
+      bottom: 8%;
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .page {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: max(24px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom));
+    }
+
+    .offer {
+      position: relative;
+      width: min(100%, 430px);
+      padding: 34px 25px 26px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .72);
+      border-radius: 24px;
+      background: var(--paper);
+      box-shadow: 0 24px 70px rgba(20, 15, 38, .34), inset 0 0 0 5px rgba(255,255,255,.42);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      animation: arrive .8s cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    .offer::before {
+      content: "";
+      position: absolute;
+      inset: 11px;
+      border: 1px solid rgba(159, 69, 96, .2);
+      border-radius: 17px;
+      pointer-events: none;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--night);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .24em;
+    }
+
+    .brand-mark {
+      width: 31px;
+      height: 31px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      font-size: 16px;
+      background: linear-gradient(145deg, #292b51, #b55e79);
+      box-shadow: 0 6px 15px rgba(98, 58, 90, .25);
+    }
+
+    .eyebrow {
+      margin: 25px 0 4px;
+      color: var(--wine);
+      text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .28em;
+    }
+
+    h1 {
+      margin: 0;
+      color: #30273b;
+      text-align: center;
+      font-size: clamp(30px, 8.5vw, 38px);
+      font-weight: 700;
+      letter-spacing: .12em;
+    }
+
+    .ornament {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      width: 150px;
+      margin: 17px auto 23px;
+      color: #c4788e;
+      font-size: 13px;
+    }
+
+    .ornament::before,
+    .ornament::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #c8899b);
+    }
+
+    .ornament::after { transform: rotate(180deg); }
+
+    .recipient {
+      margin: 0 0 16px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .body-copy {
+      margin: 0;
+      color: #554c58;
+      font-size: 15px;
+      line-height: 2;
+      text-align: justify;
+    }
+
+    .role-card {
+      margin: 20px 0;
+      padding: 16px 17px;
+      border: 1px solid rgba(170, 88, 112, .18);
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(249,225,231,.62), rgba(240,235,247,.72));
+    }
+
+    .role-row {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 10px;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      font-size: 13px;
+      line-height: 1.85;
+    }
+
+    .role-row + .role-row { margin-top: 2px; }
+    .role-row span { color: #8b7a88; }
+    .role-row strong { color: #423548; font-weight: 650; }
+
+    blockquote {
+      position: relative;
+      margin: 21px 0 12px;
+      padding: 0 12px;
+      color: #80465a;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.8;
+    }
+
+    blockquote small {
+      display: block;
+      margin-top: 8px;
+      color: #8b7780;
+      font-size: 13px;
+      font-weight: 400;
+    }
+
+    .signature {
+      margin: 19px 3px 23px;
+      text-align: right;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .signature strong {
+      display: block;
+      color: var(--night);
+      font-size: 17px;
+      letter-spacing: .08em;
+    }
+
+    .actions {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 11px;
+    }
+
+    button {
+      min-height: 52px;
+      border: 0;
+      border-radius: 999px;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    button:active { transform: scale(.96); }
+
+    .reject {
+      color: #817681;
+      background: #eee9ec;
+    }
+
+    .accept {
+      color: white;
+      background: linear-gradient(135deg, #bd607c, #e892a8);
+      box-shadow: 0 9px 20px rgba(183, 82, 113, .3);
+    }
+
+    .modal,
+    .rejection {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .28s ease, visibility .28s ease;
+    }
+
+    .modal.show,
+    .rejection.show { opacity: 1; visibility: visible; }
+
+    .modal {
+      background: rgba(53, 38, 53, .45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .modal-card {
+      position: relative;
+      width: min(100%, 350px);
+      padding: 38px 25px 27px;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,.78);
+      border-radius: 25px;
+      background: linear-gradient(145deg, #ffe6ed, #f5b8c9);
+      box-shadow: 0 25px 70px rgba(91, 37, 67, .42);
+      text-align: center;
+      transform: translateY(18px) scale(.92);
+      transition: transform .38s cubic-bezier(.2,1.2,.3,1);
+    }
+
+    .modal.show .modal-card { transform: translateY(0) scale(1); }
+
+    .modal-card h2 {
+      margin: 0;
+      color: #7f3852;
+      font-size: 24px;
+      line-height: 1.6;
+    }
+
+    .modal-card p {
+      margin: 10px 0 21px;
+      color: #92556a;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      font-size: 13px;
+    }
+
+    .modal-card button {
+      width: 100%;
+      margin-top: 21px;
+      color: white;
+      background: #a94868;
+    }
+
+    .rejection {
+      z-index: 100;
+      padding: 16px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .rejection::before {
+      content: "不可以拒绝哦！ 不可以拒绝哦！ 不可以拒绝哦！ 不可以拒绝哦！";
+      position: absolute;
+      inset: -12%;
+      color: rgba(255, 0, 20, .12);
+      font-family: Impact, "PingFang SC", sans-serif;
+      font-size: 11vw;
+      font-weight: 900;
+      line-height: 1.3;
+      word-break: break-all;
+      transform: rotate(-12deg) scale(1.2);
+    }
+
+    .rejection-text {
+      position: relative;
+      color: #ff0018;
+      text-align: center;
+      font-family: Impact, "Arial Black", "PingFang SC", sans-serif;
+      font-size: clamp(54px, 20vw, 110px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -.05em;
+      text-shadow: 0 0 12px rgba(255,0,0,.85), 4px 4px 0 #660000;
+      animation: warning .18s steps(2, end) infinite;
+    }
+
+    .rejection-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      justify-items: center;
+      gap: 42px;
+    }
+
+    .rejection-back {
+      min-width: 145px;
+      min-height: 40px;
+      padding: 0 18px;
+      color: #fff;
+      border: 2px solid #ff0018;
+      background: rgba(90, 0, 8, .72);
+      font-size: 13px;
+      box-shadow: 0 0 20px rgba(255, 0, 24, .5);
+    }
+
+    @keyframes arrive {
+      from { opacity: 0; transform: translateY(24px) scale(.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes warning {
+      0% { transform: translate(-3px, 2px) rotate(-1deg); }
+      50% { transform: translate(3px, -2px) rotate(1deg); }
+      100% { transform: translate(0, 1px); }
+    }
+
+    @media (max-width: 370px) {
+      .offer { padding: 28px 20px 22px; }
+      .body-copy { font-size: 14px; }
+      .role-card { margin: 16px 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <article class="offer" aria-label="星空凛集团录用通知函">
+      <div class="brand">星空凛集团</div>
+      <h1>录用通知函</h1>
+      <div class="ornament">♥</div>
+
+      <p class="recipient">亲爱的郝希睿同学：</p>
+      <p class="body-copy">
+        恭喜你！在每一个值得纪念的瞬间后，星空凛决定：正式录用你，背负你未来的全部人生。
+      </p>
+
+      <blockquote>
+        “举杯歌唱吧，我们的未来一定就在前方！”
+        <small>春夏秋冬，不管什么时候，都等着你哦。</small>
+      </blockquote>
+
+      <div class="signature">
+        此致
+        <strong>星空凛</strong>
+      </div>
+
+      <div class="actions">
+        <button class="reject" id="rejectBtn" type="button">婉拒 Offer</button>
+        <button class="accept" id="acceptBtn" type="button">接受</button>
+      </div>
+    </article>
+  </main>
+
+  <section class="modal" id="acceptModal" role="dialog" aria-modal="true" aria-labelledby="acceptTitle">
+    <div class="modal-card">
+      <h2 id="acceptTitle">两个人的奇迹<br>是永远不会改变的！</h2>
+      <button id="closeModal" type="button">好的喵</button>
+    </div>
+  </section>
+
+  <section class="rejection" id="rejection" role="alert" aria-live="assertive">
+    <div class="rejection-content">
+      <div class="rejection-text">不可以<br>拒绝哦！</div>
+      <button class="rejection-back" id="rejectionBack" type="button">我会一直盯着你</button>
+    </div>
+  </section>
+
+  <script>
+    const acceptBtn = document.getElementById('acceptBtn');
+    const rejectBtn = document.getElementById('rejectBtn');
+    const acceptModal = document.getElementById('acceptModal');
+    const closeModal = document.getElementById('closeModal');
+    const rejection = document.getElementById('rejection');
+    const rejectionBack = document.getElementById('rejectionBack');
+
+    acceptBtn.addEventListener('click', () => {
+      acceptModal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    });
+
+    closeModal.addEventListener('click', () => {
+      acceptModal.classList.remove('show');
+      document.body.style.overflow = '';
+    });
+
+    rejectBtn.addEventListener('click', () => {
+      rejection.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      if (navigator.vibrate) navigator.vibrate([90, 50, 90]);
+    });
+
+    rejectionBack.addEventListener('click', () => {
+      rejection.classList.remove('show');
+      document.body.style.overflow = '';
+    });
+  </script>
+</body>
+</html>
